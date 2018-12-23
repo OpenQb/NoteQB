@@ -15,4 +15,11 @@ Project {
     Files{
         paths:"./app.json"
     }
+
+    Files{
+        paths:"./NoteQB/qmldir"
+    }
+    Files{
+        paths:"./NoteQB/Core/qmldir"
+    }
 }
