@@ -1,0 +1,22 @@
+{
+    "name"			: "NoteQB",
+    "version"		: "1.0.0",
+    "build"         : 1,
+    "namespace"		: "com.cliodin.qb.NoteQB",
+	
+	"supportedOs"   : ["android","ios","osx","windows","linux"],
+    "tags"          : "note,notebook,markdown",
+
+	"category"      : "Applications",
+    "subCategory"   : "Productivity",
+    "genre"   		: "Productivity",
+	
+    "minQbVersion"  : "1.0.0",
+    "appVariant"    : "APP",
+    "packageVariant": "QAP",
+
+    "description"   : "Easy to use notepad",
+
+    "author"		: [{"name":"Kawser","link":"https://github.com/mkawserm"}],
+    "projectLink"	: [{"name":"GitHub","link":"OpenQb/NoteQB"}]
+}
