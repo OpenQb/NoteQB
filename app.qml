@@ -31,5 +31,6 @@ ZeUi.ZSOneAppUi{
         theme["error"] = "#B00020";
         theme["foreground"] = "black";
         ZeUi.ZBTheme.metaTheme.setThemeFromJsonData(JSON.stringify(theme));
+        objMainAppUi.addPage("/NoteQB/pages/Error.qml",{});
     }
 }
