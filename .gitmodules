@@ -1,0 +1,3 @@
+[submodule "ZeUi"]
+	path = ZeUi
+	url = https://github.com/OpenQb/ZeUi.git
