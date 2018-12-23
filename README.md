@@ -1,2 +1,2 @@
 # NoteQB
-Easy to use notepad for Qb
+Easy to use notepad
