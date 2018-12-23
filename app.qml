@@ -6,7 +6,7 @@ import "ZeUi" as ZeUi
 
 ZeUi.ZSOneAppUi{
     id: objMainAppUi
-    dockLogo: objMainAppUi.absoluteURL("/app.svg")
+    dockLogo: objMainAppUi.absoluteURL("/NoteQB/images/NoteQB.png")
     changeWindowPosition: true
     onLogoClicked: {
         objMainAppUi.changePage(0);
@@ -31,6 +31,13 @@ ZeUi.ZSOneAppUi{
         theme["error"] = "#B00020";
         theme["foreground"] = "black";
         ZeUi.ZBTheme.metaTheme.setThemeFromJsonData(JSON.stringify(theme));
-        objMainAppUi.addPage("/NoteQB/pages/Error.qml",{});
+
+
+        if(parseInt(QbApplicationBuildNumber)<1890){
+            objMainAppUi.addPage("/NoteQB/pages/Error.qml",{});
+        }
+        else{
+            objMainAppUi.addPage("/NoteQB/pages/NoteQB.qml",{});
+        }
     }
 }
