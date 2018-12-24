@@ -50,14 +50,18 @@ ZeUi.ZDialogUi2{
         }
         else{
             var dbpath = pathField+"/"+nameField+"."+String(dbFormatField).toLowerCase();
-            console.log(dbpath);
             if(QbUtil.isFileWritable(pathField)){
-                if(Core.NQBOne.noteDbModelORM.noteDbModelQuery.add({"path":dbpath,"meta":{}}))
-                {
-                    objAddNoteDbDialog.noteDbAdded();
+                if(!Core.NQBOne.isNoteDbExists(dbpath)){
+                    if(Core.NQBOne.addNoteDb({"path":dbpath,"meta":{}}))
+                    {
+                        objAddNoteDbDialog.noteDbAdded();
+                    }
+                    else{
+                        objAddNoteDbDialog.statusBarMessage = Lang.NQBLang.language.se3;
+                    }
                 }
                 else{
-                    objAddNoteDbDialog.statusBarMessage = Lang.NQBLang.language.se3;
+                    objAddNoteDbDialog.statusBarMessage = Lang.NQBLang.language.se5;
                 }
             }
             else{
@@ -65,8 +69,6 @@ ZeUi.ZDialogUi2{
             }
         }
     }
-
-
 
 
     modelComponent: Component{

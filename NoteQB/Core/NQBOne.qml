@@ -53,4 +53,13 @@ Item {
         }
     }
 
+    function addNoteDb(data){
+        return objORM.noteDbModelQuery.add(data);
+    }
+
+    function isNoteDbExists(path){
+        objORM.noteDbModelQuery.resetFilters();
+        return objORM.noteDbModelQuery.filter("path",QbORMFilter.EQUAL,path).count() === 1;
+    }
+
 }
