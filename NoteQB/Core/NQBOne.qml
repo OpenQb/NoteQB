@@ -13,6 +13,7 @@ Item {
     property string lastPath;
 
     signal error(string errorText);
+    signal refresh();
 
     property alias noteDbModelORM: objORM;
 
@@ -23,6 +24,10 @@ Item {
         Component.onCompleted: {
             objSettings.setAppId(ZeUi.ZBLib.appUi.appId);
         }
+    }
+
+    QbOneOneMap{
+        id: objOneOneMap
     }
 
 
@@ -62,10 +67,66 @@ Item {
         return objORM.noteDbModelQuery.filter("path",QbORMFilter.EQUAL,path).count() === 1;
     }
 
-    function removeNoteDb(index){
-        if(objORM.noteDbModelQuery.at(index)){
-            objORM.noteDbModelQuery.at(index).remove();
-            objNoteDbQueryModel.search(["path","meta"]);
+    function removeNoteDbByIndex(index){
+        if(objNoteDbModelQuery.remove(index)){
+        }
+    }
+
+
+    function openNoteDb(path)
+    {
+        console.log("Open:"+path);
+        if(!objOneOneMap.isValueExists(path))
+        {
+            objOneOneMap.append(QbUtil.fileNameWithoutExtFromPath(path),path);
+            //ZeUi.ZBLib.appUi.addPage("/StudioQB/ProjectPage.qml",d);
+        }
+        else
+        {
+            var index = objOneOneMap.indexOfValue(path);
+            ZeUi.ZBLib.appUi.changePage(index);
+        }
+        return true;
+    }
+
+    function openNoteDbX(path,password){
+
+    }
+
+    function closeNoteDb(path){
+        console.log("Close:"+path);
+        if(objOneOneMap.isValueExists(path))
+        {
+            var index = objOneOneMap.indexOfValue(path);
+            ZeUi.ZBLib.appUi.closePage(index);
+            objOneOneMap.remove(index);
+            return true;
+        }
+        return false;
+    }
+
+    function removeNoteDb(path){
+        console.log("Remove:"+path);
+        closeNoteDb(path);
+        var index = objNoteDbModelQuery.indexOf("path",path);
+        if(index !== -1){
+            removeNoteDbByIndex(index);
+        }
+    }
+
+
+    function addPage(name,path){
+        if(!objOneOneMap.isKeyExists(name))
+        {
+            objOneOneMap.append(name,path);
+            ZeUi.ZBLib.appUi.addPage(path,{});
+            return true;
+        }
+        else
+        {
+            var index = objOneOneMap.indexOf(name);
+            ZeUi.ZBLib.appUi.changePage(index);
+            return true;
         }
     }
 

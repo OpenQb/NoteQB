@@ -3,6 +3,7 @@ import Qb.Core 1.0
 import QtQuick 2.10
 
 import "ZeUi" as ZeUi
+import "./NoteQB/Core" as Core
 
 ZeUi.ZSOneAppUi{
     id: objMainAppUi
@@ -32,11 +33,13 @@ ZeUi.ZSOneAppUi{
         theme["foreground"] = "black";
         ZeUi.ZBTheme.metaTheme.setThemeFromJsonData(JSON.stringify(theme));
 
-        if(parseInt(QbApplicationBuildNumber)<1894){
+        if(parseInt(QbApplicationBuildNumber)<1900)
+        {
             objMainAppUi.addPage("/NoteQB/pages/Error.qml",{});
         }
-        else{
-            objMainAppUi.addPage("/NoteQB/pages/NoteQB.qml",{});
+        else
+        {
+            Core.NQBOne.addPage("##NoteQB##","/NoteQB/pages/NoteQB.qml");
         }
     }
 }
