@@ -32,8 +32,7 @@ ZeUi.ZSOneAppUi{
         theme["foreground"] = "black";
         ZeUi.ZBTheme.metaTheme.setThemeFromJsonData(JSON.stringify(theme));
 
-
-        if(parseInt(QbApplicationBuildNumber)<1890){
+        if(parseInt(QbApplicationBuildNumber)<1894){
             objMainAppUi.addPage("/NoteQB/pages/Error.qml",{});
         }
         else{

@@ -16,6 +16,7 @@ ZeUi.ZSOneAppPage{
     onSelectedContextDockItem: {
         //title
         if(title === "Add"){
+            objAddNoteDb.resetFields();
             objAddNoteDb.open();
         }
     }
@@ -43,8 +44,10 @@ ZeUi.ZSOneAppPage{
     Comp.NQBAddNoteDb{
         id: objAddNoteDb
         anchors.fill: parent
+        onNoteDbAdded: {
+            objAddNoteDb.close();
+        }
     }
-
     /* end dialog space*/
 
     onPageCreated: {

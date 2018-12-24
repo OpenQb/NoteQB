@@ -22,4 +22,7 @@ Project {
     Files{
         paths:"./NoteQB/Core/qmldir"
     }
+    Files{
+        paths:"./NoteQB/Lang/qmldir"
+    }
 }
