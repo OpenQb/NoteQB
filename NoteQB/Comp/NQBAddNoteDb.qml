@@ -16,7 +16,7 @@ ZeUi.ZDialogUi{
     }
 
     model: ObjectModel{
-        NQBTextField {
+        ZeUi.ZTextField {
             id: objNameField
             label: "Name"
             labelWidth: 30
