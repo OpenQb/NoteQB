@@ -16,6 +16,7 @@ ZeUi.ZDialogUi{
     }
 
     model: ObjectModel{
+
         ZeUi.ZTextField {
             id: objNameField
             label: "Name"
@@ -24,5 +25,11 @@ ZeUi.ZDialogUi{
             width: objAddNoteDbDialog.dialogWidth
             useAlternateColor: false
         }
+
+        ZeUi.ZSpacer{
+            width:objAddNoteDbDialog.dialogWidth
+            height: 5
+        }
+
     }
 }
