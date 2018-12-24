@@ -12,7 +12,7 @@ ZeUi.ZDialogUi{
     enableStatusBar: true
     statusBarButtonText: "ADD"
     topRadius: 0
-    signal projectAdded();
+    signal noteDbAdded();
     onButtonClicked: {
 
     }
@@ -46,5 +46,13 @@ ZeUi.ZDialogUi{
             height: 5
         }
 
+        ZeUi.ZComboBox {
+            id: objDbFormat
+            label: "Db Format"
+            labelWidth: 30
+            borderWidth: 1
+            width: objAddNoteDbDialog.dialogWidth
+            comboBoxModel: ["QDBN","QDBX"]
+        }
     }
 }
