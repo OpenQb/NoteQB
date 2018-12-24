@@ -75,11 +75,21 @@ Item {
 
     function openNoteDb(path)
     {
-        console.log("Open:"+path);
+        openNoteDbX(path,"");
+    }
+
+    function openNoteDbX(path,password){
+        //console.log("Open:"+path);
+        //console.log("isExists:"+objOneOneMap.isValueExists(path))
         if(!objOneOneMap.isValueExists(path))
         {
-            objOneOneMap.append(QbUtil.fileNameWithoutExtFromPath(path),path);
-            //ZeUi.ZBLib.appUi.addPage("/StudioQB/ProjectPage.qml",d);
+            var title = QbUtil.fileNameWithoutExtFromPath(path);
+            objOneOneMap.append(title,path);
+            var m = {};
+            m["title"] = title;
+            m["path"] = path;
+            m["password"] = password;
+            ZeUi.ZBLib.appUi.addPage("/NoteQB/pages/NoteDb.qml",m);
         }
         else
         {
@@ -87,10 +97,6 @@ Item {
             ZeUi.ZBLib.appUi.changePage(index);
         }
         return true;
-    }
-
-    function openNoteDbX(path,password){
-
     }
 
     function closeNoteDb(path){
