@@ -62,4 +62,11 @@ Item {
         return objORM.noteDbModelQuery.filter("path",QbORMFilter.EQUAL,path).count() === 1;
     }
 
+    function removeNoteDb(index){
+        if(objORM.noteDbModelQuery.at(index)){
+            objORM.noteDbModelQuery.at(index).remove();
+            objNoteDbQueryModel.search(["path","meta"]);
+        }
+    }
+
 }
