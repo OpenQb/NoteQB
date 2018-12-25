@@ -2,7 +2,7 @@ import Qb.ORM 1.0
 import QtQuick 2.0
 
 QbORMModel{
-    tableName: "NQBFolder";
+    tableName: "NQBNoteFolder";
     pk: QbORMField.puid();
 
     property var folder: QbORMField.charField("",512);

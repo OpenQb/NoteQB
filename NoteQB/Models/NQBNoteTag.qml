@@ -2,13 +2,10 @@ import Qb.ORM 1.0
 import QtQuick 2.0
 
 QbORMModel{
-    tableName: "NQBNoteMeta";
+    tableName: "NQBNoteTag";
     pk: QbORMField.puid();
 
-    property var meta:  QbORMField.variant("");
-    property var name: QbORMField.charField("",512);
-    property var notePk: QbORMField.unsignedBigIntegerNumber();
-
+    property var tag: QbORMField.charField("",512);
 
 
     property var updated: QbORMField.timestamp(0,true,true);

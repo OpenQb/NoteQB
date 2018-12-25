@@ -2,7 +2,7 @@ import Qb.ORM 1.0
 import QtQuick 2.0
 
 QbORMModel{
-    tableName: "NQBTagNoteRelation";
+    tableName: "NQBNoteTagRelation";
     pk: QbORMField.puid();
 
 
