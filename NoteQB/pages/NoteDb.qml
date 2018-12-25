@@ -64,48 +64,15 @@ ZeUi.ZSOneAppPage{
     }
 
     /*Non Visual Core Items here*/
-    QbORM{
-        id: objOrm
-        dbName: objPage.path
+    Core.NQBNoteManager{
+        dbPath: objPage.path
         dbDriver: objPage.isPasswordProtected?"BEESD":"QSQLITE"
         password: objPage.password
         masterPassword: objPage.password
         masterPasswordIterationCount:  64000/*Iteration count will be based on db version*/
-
-        property Component noteModel:Component{
-            Core.NQBNoteModel{
-            }
-        }
-
-        property Component keyValuePairModel:Component{
-            Core.NQBKeyValuePairModel{
-            }
-        }
-
-        property QbORMQuery noteModelQuery: QbORMQuery{
-            model: objOrm.noteModel
-        }
-
-        property QbORMQuery keyValuePairModelQuery: QbORMQuery{
-            model: objOrm.keyValuePairModel
-        }
-    }
-
-    QbORMQueryModel{
-        id: objQueryModel_NoteModel
-        query: objOrm.noteModelQuery
-        limit: 100
     }
 
     /*all functions here*/
-    function all(){
-        objQueryModel_NoteModel.search(["name","group","tags","note","meta"])
-    }
-
-    function searchByGroup(value){
-        objQueryModel_NoteModel.search("group",value);
-    }
-
 
     /*Visual items here*/
     Rectangle{
