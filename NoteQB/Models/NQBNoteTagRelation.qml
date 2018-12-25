@@ -6,6 +6,6 @@ QbORMModel{
     pk: QbORMField.puid();
 
 
-    property var tagPk: QbORMField.charField("",512);
+    property var tagPk: QbORMField.unsignedBigIntegerNumber();
     property var notePk: QbORMField.unsignedBigIntegerNumber();
 }
