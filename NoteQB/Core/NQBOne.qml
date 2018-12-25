@@ -14,6 +14,7 @@ Item {
 
     signal error(string errorText);
     signal refresh();
+    signal requestForPassword();
 
     property alias noteDbModelORM: objORM;
 
@@ -47,14 +48,11 @@ Item {
         }
 
         property Component noteDbModel:Component{
-            id: objNoteDbModel
             NQBNoteDbModel{
             }
         }
-
         property QbORMQuery noteDbModelQuery: QbORMQuery{
-            id: objNoteDbModelQuery
-            model: objNoteDbModel
+            model: objORM.noteDbModel
         }
     }
 
@@ -68,14 +66,21 @@ Item {
     }
 
     function removeNoteDbByIndex(index){
-        if(objNoteDbModelQuery.remove(index)){
+        if(objORM.noteDbModelQuery.remove(index)){
         }
     }
 
 
     function openNoteDb(path)
     {
-        openNoteDbX(path,"");
+        if(!QbUtil.stringIEndsWith(path,".QDBX"))
+        {
+            openNoteDbX(path,"");
+        }
+        else
+        {
+            objNQBOne.requestForPassword();
+        }
     }
 
     function openNoteDbX(path,password){
@@ -83,12 +88,18 @@ Item {
         //console.log("isExists:"+objOneOneMap.isValueExists(path))
         if(!objOneOneMap.isValueExists(path))
         {
-            var title = QbUtil.fileNameWithoutExtFromPath(path);
+            var title = QbUtil.fileNameFromPath(path);
             objOneOneMap.append(title,path);
             var m = {};
             m["title"] = title;
             m["path"] = path;
-            m["password"] = password;
+
+            if(QbUtil.stringIEndsWith(path,".QDBX"))
+            {
+                m["password"] = password;
+                m["isPasswordProtected"] = true;
+            }
+
             ZeUi.ZBLib.appUi.addPage("/NoteQB/pages/NoteDb.qml",m);
         }
         else
@@ -114,7 +125,7 @@ Item {
     function removeNoteDb(path){
         console.log("Remove:"+path);
         closeNoteDb(path);
-        var index = objNoteDbModelQuery.indexOf("path",path);
+        var index = objORM.noteDbModelQuery.indexOf("path",path);
         if(index !== -1){
             removeNoteDbByIndex(index);
         }
