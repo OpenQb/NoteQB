@@ -34,7 +34,7 @@ ZeUi.ZSOneAppPage{
                 //TODO: show custom error message
             }
             else{
-                objPage.isDbReady = objOrm.isORMReady();
+                objPage.isDbReady = objNoteManager.orm.isORMReady();
                 if(!objPage.isDbReady)
                 {
                     //TODO: show custom error message
@@ -42,7 +42,7 @@ ZeUi.ZSOneAppPage{
             }
         }
         else{
-            objPage.isDbReady = objOrm.isORMReady();
+            objPage.isDbReady = objNoteManager.orm.isORMReady();
             if(!objPage.isDbReady)
             {
                 //TODO: show custom error message
@@ -65,11 +65,12 @@ ZeUi.ZSOneAppPage{
 
     /*Non Visual Core Items here*/
     Core.NQBNoteManager{
+        id: objNoteManager
         dbPath: objPage.path
         dbDriver: objPage.isPasswordProtected?"BEESD":"QSQLITE"
         password: objPage.password
         masterPassword: objPage.password
-        masterPasswordIterationCount:  64000/*Iteration count will be based on db version*/
+        masterPasswordIterationCount: 64000 /*Iteration count will be based on db version*/
     }
 
     /*all functions here*/
