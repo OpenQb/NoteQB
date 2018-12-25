@@ -6,7 +6,9 @@ QbORMModel{
     pk: QbORMField.puid();
 
     property var meta:  QbORMField.json({});
+    property var name: QbORMField.charField("",512);
     property var notePk: QbORMField.unsignedBigIntegerNumber();
+
 
 
     property var updated: QbORMField.timestamp(0,true,true);
