@@ -3,13 +3,9 @@ import QtQuick 2.0
 
 QbORMModel{
     tableName: "NQBNoteMeta";
-    pk: QbORMField.puid();
+    pk: QbORMField.unsignedBigIntegerNumber(0,true,true); /* Note PK */
 
     property var meta:  QbORMField.variant("");
-    property var name: QbORMField.charField("",512);
-    property var notePk: QbORMField.unsignedBigIntegerNumber();
-
-
 
     property var updated: QbORMField.timestamp(0,true,true);
     property var created: QbORMField.timestamp(0,true,false);

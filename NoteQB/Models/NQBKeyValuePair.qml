@@ -4,8 +4,6 @@ import QtQuick 2.0
 
 QbORMModel{
     tableName: "NQBKeyValuePair";
-    pk: QbORMField.puid();
-
     property var name: QbORMField.charField("",512/*maxLength*/,true/*isUnique*/);
     property var value:  QbORMField.variant("")
 
