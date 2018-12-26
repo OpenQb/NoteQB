@@ -25,7 +25,7 @@ QbORMModel{
                            true/*isSelectable*/
                            );
 
-    property var status: QbORMField.integerNumber(0); /*0 means active,1 means trashed,2 means archived*/
+    property var status: QbORMField.integerNumber(0); /* 0 means active, 1 means trashed, 2 means archived */
 
 
     property var updated: QbORMField.timestamp(0,true,true);
