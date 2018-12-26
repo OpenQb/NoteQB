@@ -23,6 +23,36 @@ ZeUi.ZSOneAppPage{
     property int dbVersion: 1
 
 
+    signal sigAddGroup();
+    signal sigAddNote();
+
+
+    contextDock: objContextDock
+
+    onSelectedContextDockItem: {
+        //title
+        if(title === "Add Note"){
+        }
+        else if(title === "Refresh")
+        {
+
+        }
+    }
+
+    ListModel{
+        id: objContextDock
+        ListElement{
+            icon: "mf-add_box"
+            title: "Add Note"
+        }
+        ListElement{
+            icon: "mf-view_list"
+            title: "Groups"
+        }
+    }
+
+
+
     onPageCreated: {
         console.log("NoteDb page created");
 
@@ -80,4 +110,7 @@ ZeUi.ZSOneAppPage{
     NoteDBComp.NDbVNoteStackView{
         anchors.fill: parent
     }
+
+
+    /* All dialogs here */
 }
