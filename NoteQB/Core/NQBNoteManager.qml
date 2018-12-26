@@ -28,18 +28,11 @@ Item {
     property alias keyValuePairQuery: objORM.keyValuePairQuery
 
     /* All methods here */
-    function isFolderExists(name)
+    function isGroupExists(name)
     {
-        noteFolderQuery.resetFilters();
-        noteFolderQuery.filter("folder", QbORMFilter.EQUAL, name);
-        noteFolderQuery.filter("ppk", QbORMFilter.EQUAL, 0);
-        return noteFolderQuery.count() === 1;
-    }
-
-    function getTagPk(tag){
-        noteTagQuery.resetFilters();
-        noteTagQuery.filter("tag", QbORMFilter.EQUAL, tag);
-
+        noteGroupQuery.resetFilters();
+        noteGroupQuery.filter("group", QbORMFilter.EQUAL, name);
+        return noteGroupQuery.count() === 1;
     }
 
 
