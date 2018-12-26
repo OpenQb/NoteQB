@@ -9,6 +9,7 @@ import QtQuick.Controls.Material 2.2
 import "./../../ZeUi" as ZeUi
 import "./../Core" as Core
 import "./../Comp" as Comp
+import "./NoteDBComp" as NoteDBComp
 
 ZeUi.ZSOneAppPage{
     id: objPage
@@ -76,8 +77,7 @@ ZeUi.ZSOneAppPage{
     /*all functions here*/
 
     /*Visual items here*/
-    Rectangle{
+    NoteDBComp.NDbVNoteStackView{
         anchors.fill: parent
     }
-
 }
