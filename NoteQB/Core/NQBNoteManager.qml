@@ -21,11 +21,14 @@ Item {
     property alias noteMeta: objORM.noteMeta
     property alias noteQuery: objORM.noteQuery
 
+
     property alias noteGroup: objORM.noteGroup
     property alias noteGroupQuery: objORM.noteGroupQuery
 
+
+    property alias noteTag: objORM.noteTag
     property alias keyValuePair: objORM.keyValuePair
-    property alias keyValuePairQuery: objORM.keyValuePairQuery
+    property alias queryModel: objORM.queryModel
 
     /* All methods here */
     function isGroupExists(name)
@@ -50,13 +53,18 @@ Item {
             }
         }
 
-        property QbORMQuery noteQuery: QbORMQuery{
-            model: objORM.note
-        }
-
         property Component noteFile:Component{
             Models.NQBNoteFile{
             }
+        }
+
+        property Component noteMeta:Component{
+            Models.NQBNoteMeta{
+            }
+        }
+
+        property QbORMQuery noteQuery: QbORMQuery{
+            model: objORM.note
         }
 
         property Component noteGroup:Component{
@@ -68,8 +76,9 @@ Item {
             model: objORM.noteGroup
         }
 
-        property Component noteMeta:Component{
-            Models.NQBNoteMeta{
+
+        property Component noteTag:Component{
+            Models.NQBNoteTag{
             }
         }
 
@@ -78,8 +87,9 @@ Item {
             }
         }
 
-        property QbORMQuery keyValuePairQuery: QbORMQuery{
-            model: objORM.keyValuePair
+
+        property QbORMQuery queryModel: QbORMQuery{
+            model: objORM.keyValuePair /*default model*/
         }
 
     }
