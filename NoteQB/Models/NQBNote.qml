@@ -17,8 +17,6 @@ QbORMModel{
 
     property var tags: QbORMField.json(
                            [], /*default value*/
-                           false, /*isUnique*/
-                           false, /*isPrimaryKey*/
                            "Tags", /*label*/
                            false,/*isVisible*/
                            false,/*isEditable*/
@@ -26,9 +24,9 @@ QbORMModel{
                            );
 
     property var status: QbORMField.integerNumber(0); /* 0 means active, 1 means trashed, 2 means archived */
-
+    property var reminder: QbORMField.timestamp(0,false,false);
 
     property var updated: QbORMField.timestamp(0,true,true);
     property var created: QbORMField.timestamp(0,true,false);
-    property var reminder: QbORMField.timestamp(0,false,false);
+
 }

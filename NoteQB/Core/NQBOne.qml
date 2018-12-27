@@ -18,6 +18,11 @@ Item {
 
     property alias noteDbModelORM: objORM;
 
+
+    onError: {
+        console.log(errorText);
+    }
+
     QbSettings{
         id: objSettings
         name: "NQBOne"

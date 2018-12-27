@@ -31,7 +31,9 @@ ZeUi.ZSOneAppPage{
 
     onSelectedContextDockItem: {
         //title
-        if(title === "Add Note"){
+        if(title === "Add Note")
+        {
+            objAddNote.open();
         }
         else if(title === "Refresh")
         {
@@ -80,6 +82,9 @@ ZeUi.ZSOneAppPage{
             }
         }
 
+        if(objPage.isDbReady){
+
+        }
     }
     onPageClosing: {
         console.log("NoteDb page closing");
@@ -106,11 +111,29 @@ ZeUi.ZSOneAppPage{
 
     /*all functions here*/
 
-    /*Visual items here*/
+    /* Visual items here */
     NoteDBComp.NDbVNoteStackView{
         anchors.fill: parent
     }
 
 
     /* All dialogs here */
+    Comp.NQBAddNote{
+        id: objAddNote
+        anchors.fill: parent
+        onButtonClicked: {
+            if(objAddNote.isValid())
+            {
+                if(objNoteManager.noteQuery.add(objAddNote.getDataMap()))
+                {
+                    objAddNote.statusBarMessage = "Note added";
+                    objAddNote.close();
+                }
+            }
+            else
+            {
+                objAddNote.statusBarMessage = "Name and group is required";
+            }
+        }
+    }
 }
