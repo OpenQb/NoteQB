@@ -11,7 +11,7 @@ import "./../Core" as Core
 import "./../Comp" as Comp
 
 
-ZeUi.ZSOneAppPage{
+ZeUi.ZPage{
     id: objNoteQBPage
     title: "NoteQB"
     contextDock: objContextDock
@@ -196,11 +196,11 @@ ZeUi.ZSOneAppPage{
 
                     Keys.onReturnPressed: {
                         event.accepted = true;
-                        StudioQBCore.StudioQBOne.openProject(pid,name,source_dir,output_dir,export_format,json);
+                        Core.NQBOne.openNoteDb(path);
                     }
                     Keys.onEnterPressed: {
                         event.accepted = true;
-                        StudioQBCore.StudioQBOne.openProject(pid,name,source_dir,output_dir,export_format,json);
+                        Core.NQBOne.openNoteDb(path);
                     }
                     Rectangle{
                         id: objDelegateBackground
@@ -327,7 +327,8 @@ ZeUi.ZSOneAppPage{
                             }
                         }
                     }
-                }
+                }//delegate
+
             }
             Rectangle{
                 width: 2

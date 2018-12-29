@@ -5,7 +5,7 @@ import QtQuick 2.10
 import "ZeUi" as ZeUi
 import "./NoteQB/Core" as Core
 
-ZeUi.ZSOneAppUi{
+ZeUi.ZAppUi{
     id: objMainAppUi
     dockLogo: objMainAppUi.absoluteURL("/NoteQB/images/NoteQB.png")
     changeWindowPosition: true

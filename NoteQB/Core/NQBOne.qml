@@ -152,4 +152,42 @@ Item {
         }
     }
 
+    function openNote(title,manager,pk,index){
+        console.log("Open Note");
+        if(!objOneOneMap.isKeyExists(pk))
+        {
+            var m = {};
+            m["title"] = title;
+            m["noteManager"] = manager;
+            m["pk"] = pk;
+            objOneOneMap.append(pk,title);
+            ZeUi.ZBLib.appUi.addPage("NoteQB/pages/NoteView.qml",m);
+            return true;
+        }
+        else
+        {
+            var pindex = objOneOneMap.indexOf(pk);
+            ZeUi.ZBLib.appUi.changePage(pindex);
+            return true;
+        }
+    }
+
+    function closeNote(title,manager,pk,index){
+        console.log("Close Note");
+        if(objOneOneMap.isKeyExists(pk))
+        {
+            var pindex = objOneOneMap.indexOf(pk);
+            ZeUi.ZBLib.appUi.closePage(pindex);
+            objOneOneMap.remove(pindex);
+            return true;
+        }
+        return false;
+    }
+
+    function deleteNote(title,manager,pk,index){
+        console.log("Delete Note");
+        closeNote(title,manager,pk,index);
+        manager.trashByIndex(index);
+    }
+
 }

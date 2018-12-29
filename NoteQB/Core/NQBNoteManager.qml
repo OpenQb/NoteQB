@@ -30,12 +30,52 @@ Item {
     property alias keyValuePair: objORM.keyValuePair
     property alias queryModel: objORM.queryModel
 
+    property int limit: 100;
+    property int currentPage: 1;
+    property string currentGroup: ""
+
+    onLimitChanged: {
+        currentPage = 1;
+        currentGroup = "";
+        objNoteManager.refresh();
+    }
+
     /* All methods here */
     function isGroupExists(name)
     {
         noteGroupQuery.resetFilters();
         noteGroupQuery.filter("group", QbORMFilter.EQUAL, name);
         return noteGroupQuery.count() === 1;
+    }
+
+    function trashByIndex(index){
+        var nnote = objORM.noteQuery.at(index);
+        nnote.status = 1;
+        if(nnote.update()){
+            refresh();
+        }
+    }
+
+    function all(){
+        objNoteManager.noteQuery.resetFilters();
+        objNoteManager.noteQuery.all();
+    }
+
+    function refresh()
+    {
+        if(objNoteManager.currentGroup === "")
+        {
+            objNoteManager.noteQuery.resetFilters();
+            objNoteManager.noteQuery.filter("status",QbORMFilter.EQUAL,0);
+            objNoteManager.noteQuery.page(objNoteManager.currentPage,objNoteManager.limit);
+        }
+        else
+        {
+            objNoteManager.noteQuery.resetFilters();
+            objNoteManager.noteQuery.filter("group",QbORMFilter.EQUAL,objNoteManager.currentGroup);
+            objNoteManager.noteQuery._and("status",QbORMFilter.EQUAL,0);
+            objNoteManager.noteQuery.page(objNoteManager.currentPage,objNoteManager.limit);
+        }
     }
 
 

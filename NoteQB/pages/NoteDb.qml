@@ -11,7 +11,7 @@ import "./../Core" as Core
 import "./../Comp" as Comp
 import "./NoteDBComp" as NoteDBComp
 
-ZeUi.ZSOneAppPage{
+ZeUi.ZPage{
     id: objPage
     title: "Note Db"
 
@@ -22,24 +22,13 @@ ZeUi.ZSOneAppPage{
     property bool isDbReady: false;
     property int dbVersion: 1
 
-
-
-    property int limit: 100;
-    property int currentPage: 1;
-    property string currentGroup: ""
-
-
     signal sigAddGroup();
     signal sigAddNote();
 
 
     contextDock: objContextDock
-
-    onLimitChanged: {
-        currentPage = 1;
-        currentGroup = "";
-        objPage.refresh();
-    }
+    activeFocusOnTab: false
+    Keys.forwardTo: [objNoteListView]
 
     onSelectedContextDockItem: {
         //title
@@ -51,9 +40,13 @@ ZeUi.ZSOneAppPage{
         }
         else if(title === "Edit Note")
         {
-            objAddNote.isUpdate = true;
-            objAddNote.resetFields();
-            objAddNote.open();
+            if(objNoteListView.currentIndex !==-1){
+                var m = objNoteManager.noteQuery.at(objNoteListView.currentIndex).toMap();
+                objAddNote.isUpdate = true;
+                objAddNote.resetFields();
+                objAddNote.setDataMap(m);
+                objAddNote.open();
+            }
         }
         else if(title === "Refresh")
         {
@@ -142,28 +135,18 @@ ZeUi.ZSOneAppPage{
     /*all functions here*/
     function all()
     {
-        objNoteManager.noteQuery.resetFilters();
-        objNoteManager.noteQuery.all();
+        objNoteManager.all();
     }
 
     function refresh()
     {
-        if(objPage.currentGroup === "")
-        {
-            objNoteManager.noteQuery.resetFilters();
-            objNoteManager.noteQuery.page(objPage.currentPage,objPage.limit);
-        }
-        else
-        {
-            objNoteManager.noteQuery.resetFilters();
-            objNoteManager.noteQuery.filter("group",QbORMFilter.EQUAL,objPage.currentGroup);
-            objNoteManager.noteQuery.page(objPage.currentPage,objPage.limit);
-        }
+        objNoteManager.refresh();
     }
 
 
     /* Visual items here */
     NoteDBComp.NDbVSimpleNoteListView{
+        id: objNoteListView
         anchors.fill: parent
     }
 
@@ -174,6 +157,25 @@ ZeUi.ZSOneAppPage{
         anchors.fill: parent
         onButtonClicked: {
             if(objAddNote.isUpdate){
+                if(objAddNote.isValid())
+                {
+                    var dmap = objAddNote.getDataMap();
+                    var index = objNoteManager.noteQuery.indexOf("pk",dmap.pk);
+                    if(index !==-1){
+                        if(objNoteManager.noteQuery.update(index,dmap))
+                        {
+                            objAddNote.statusBarMessage = "Note updated";
+                            objAddNote.close();
+                        }
+                    }
+                    else{
+                        objAddNote.statusBarMessage = "Invalid index";
+                    }
+                }
+                else
+                {
+                    objAddNote.statusBarMessage = "Name and group is required";
+                }
             }
             else{
                 if(objAddNote.isValid())
