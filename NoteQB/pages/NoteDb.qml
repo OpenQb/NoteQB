@@ -23,11 +23,23 @@ ZeUi.ZSOneAppPage{
     property int dbVersion: 1
 
 
+
+    property int limit: 100;
+    property int currentPage: 1;
+    property string currentGroup: ""
+
+
     signal sigAddGroup();
     signal sigAddNote();
 
 
     contextDock: objContextDock
+
+    onLimitChanged: {
+        currentPage = 1;
+        currentGroup = "";
+        objPage.refresh();
+    }
 
     onSelectedContextDockItem: {
         //title
@@ -43,10 +55,9 @@ ZeUi.ZSOneAppPage{
             objAddNote.resetFields();
             objAddNote.open();
         }
-
         else if(title === "Refresh")
         {
-
+            objPage.refresh();
         }
     }
 
@@ -63,6 +74,10 @@ ZeUi.ZSOneAppPage{
         ListElement{
             icon: "mf-view_list"
             title: "Groups"
+        }
+        ListElement{
+            icon: "mf-refresh"
+            title: "Refresh"
         }
     }
 
@@ -95,8 +110,10 @@ ZeUi.ZSOneAppPage{
             }
         }
 
-        if(objPage.isDbReady){
 
+        if(objPage.isDbReady)
+        {
+            objPage.refresh();
         }
     }
     onPageClosing: {
@@ -123,6 +140,27 @@ ZeUi.ZSOneAppPage{
     }
 
     /*all functions here*/
+    function all()
+    {
+        objNoteManager.noteQuery.resetFilters();
+        objNoteManager.noteQuery.all();
+    }
+
+    function refresh()
+    {
+        if(objPage.currentGroup === "")
+        {
+            objNoteManager.noteQuery.resetFilters();
+            objNoteManager.noteQuery.page(objPage.currentPage,objPage.limit);
+        }
+        else
+        {
+            objNoteManager.noteQuery.resetFilters();
+            objNoteManager.noteQuery.filter("group",QbORMFilter.EQUAL,objPage.currentGroup);
+            objNoteManager.noteQuery.page(objPage.currentPage,objPage.limit);
+        }
+    }
+
 
     /* Visual items here */
     NoteDBComp.NDbVSimpleNoteListView{
