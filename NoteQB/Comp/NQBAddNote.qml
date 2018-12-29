@@ -13,11 +13,13 @@ import "./../../ZeUi" as ZeUi
 
 ZeUi.ZDialogUi2{
     id: objAddDialog
-    title: "Add Note"
+    title: isUpdate?"Update Note":"Add Note"
     enableStatusBar: true
-    statusBarButtonText: "ADD"
+    statusBarButtonText: isUpdate?"UPDATE":"ADD"
     topRadius: 0
+    property bool isUpdate:false;
 
+    property string pkField;
     property string nameField;
     property string groupField;
     property string tagsField;
@@ -30,12 +32,20 @@ ZeUi.ZDialogUi2{
 
     function getDataMap(){
         var m = {};
+        if(isUpdate) m["pk"] = pkField;
         m["name"] = nameField;
         m["group"] = groupField;
         m["tags"] = QbUtil.stringTokenList(tagsField,',');
         m["status"] = 0;
         m["reminder"] = 0;
         return m;
+    }
+
+    function setDataMap(m){
+        pkField = m["pk"];
+        nameField = m["name"];
+        groupField = m["group"];
+        tagsField = QbUtil.stringJoin(m["tags"],",");
     }
 
     function isValid(){
@@ -59,6 +69,11 @@ ZeUi.ZDialogUi2{
                 onFieldTextChanged: {
                     objAddDialog.nameField = fieldText;
                 }
+                Component.onCompleted: {
+                    if(objAddDialog.isUpdate){
+                        fieldText = objAddDialog.nameField;
+                    }
+                }
             }
 
             ZeUi.ZSpacer{
@@ -74,6 +89,11 @@ ZeUi.ZDialogUi2{
                 onFieldTextChanged: {
                     objAddDialog.groupField = fieldText;
                 }
+                Component.onCompleted: {
+                    if(objAddDialog.isUpdate){
+                        fieldText = objAddDialog.groupField;
+                    }
+                }
             }
 
             ZeUi.ZSpacer{
@@ -88,6 +108,11 @@ ZeUi.ZDialogUi2{
                 width: objAddDialog.dialogWidth
                 onFieldTextChanged: {
                     objAddDialog.tagsField = fieldText;
+                }
+                Component.onCompleted: {
+                    if(objAddDialog.isUpdate){
+                        fieldText = objAddDialog.tagsField;
+                    }
                 }
             }
 

@@ -33,8 +33,17 @@ ZeUi.ZSOneAppPage{
         //title
         if(title === "Add Note")
         {
+            objAddNote.isUpdate = false;
+            objAddNote.resetFields();
             objAddNote.open();
         }
+        else if(title === "Edit Note")
+        {
+            objAddNote.isUpdate = true;
+            objAddNote.resetFields();
+            objAddNote.open();
+        }
+
         else if(title === "Refresh")
         {
 
@@ -46,6 +55,10 @@ ZeUi.ZSOneAppPage{
         ListElement{
             icon: "mf-add_box"
             title: "Add Note"
+        }
+        ListElement{
+            icon: "mf-edit"
+            title: "Edit Note"
         }
         ListElement{
             icon: "mf-view_list"
@@ -112,7 +125,7 @@ ZeUi.ZSOneAppPage{
     /*all functions here*/
 
     /* Visual items here */
-    NoteDBComp.NDbVNoteStackView{
+    NoteDBComp.NDbVSimpleNoteListView{
         anchors.fill: parent
     }
 
@@ -122,17 +135,21 @@ ZeUi.ZSOneAppPage{
         id: objAddNote
         anchors.fill: parent
         onButtonClicked: {
-            if(objAddNote.isValid())
-            {
-                if(objNoteManager.noteQuery.add(objAddNote.getDataMap()))
-                {
-                    objAddNote.statusBarMessage = "Note added";
-                    objAddNote.close();
-                }
+            if(objAddNote.isUpdate){
             }
-            else
-            {
-                objAddNote.statusBarMessage = "Name and group is required";
+            else{
+                if(objAddNote.isValid())
+                {
+                    if(objNoteManager.noteQuery.add(objAddNote.getDataMap()))
+                    {
+                        objAddNote.statusBarMessage = "Note added";
+                        objAddNote.close();
+                    }
+                }
+                else
+                {
+                    objAddNote.statusBarMessage = "Name and group is required";
+                }
             }
         }
     }
