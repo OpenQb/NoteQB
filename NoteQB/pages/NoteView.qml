@@ -18,6 +18,8 @@ ZeUi.ZPage{
     property var noteManager: null
     contextDock: objContextDock
 
+    //Keys.forwardTo: [objFlickArea,objTextEdit]
+
     onNoteFileChanged: {
         if(noteFile)
         {
@@ -81,19 +83,114 @@ ZeUi.ZPage{
     }
 
 
+    Keys.onPressed: {
+        event.accepted = true;
+        console.log(event);
+        if(event.key === Qt.Key_Down)
+        {
+            objScrollBar.increase();
+        }
+        else if(event.key === Qt.Key_Up)
+        {
+            objScrollBar.decrease();
+        }
+    }
+    Keys.onReleased: {
+        event.accepted = true;
+        console.log(event);
+    }
+
+    Keys.onEscapePressed: {
+        event.accepted = true;
+        QbUtil.getObject("com.cliodin.qb.NoteQB").dockView.forceActiveFocus();
+    }
+
+    Keys.onTabPressed: {
+        objTextEdit.forceActiveFocus();
+    }
+
+
     Rectangle{
         anchors.fill: parent
 
-        TextEdit{
-            id: objTextEdit
+
+
+        Flickable {
+            id: objFlickArea
             anchors.fill: parent
-            onTextChanged: {
-                if(noteFile)
-                {
-                    noteFile.note = text;
+            contentWidth: parent.width
+            contentHeight: objTextEdit.paintedHeight
+            clip: true
+            Material.background: ZeUi.ZBTheme.background
+            Material.accent: ZeUi.ZBTheme.accent
+            Material.theme: Material.Light
+
+            ScrollBar.vertical: ScrollBar {
+              id: objScrollBar
+            }
+
+            function ensureVisible(r)
+            {
+                if (contentX >= r.x)
+                    contentX = r.x;
+                else if (contentX+width <= r.x+r.width)
+                    contentX = r.x+r.width-width;
+                if (contentY >= r.y)
+                    contentY = r.y;
+                else if (contentY+height <= r.y+r.height)
+                    contentY = r.y+r.height-height;
+            }
+
+            TextEdit {
+                id: objTextEdit
+                width: objFlickArea.width
+                wrapMode: TextEdit.Wrap
+                onCursorRectangleChanged: objFlickArea.ensureVisible(cursorRectangle)
+                activeFocusOnPress: false
+                textFormat: TextEdit.PlainText
+                inputMethodHints: TextEdit.ImhNoPredictiveText
+
+                onTextChanged: {
+                    if(noteFile)
+                    {
+                        noteFile.note = text;
+                    }
                 }
             }
-        }
+        }//Flickable
+
+        MouseArea{
+            anchors.fill: parent
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            preventStealing: true
+            onClicked: {
+                //console.log("Clicked:");
+                var startPosition = objTextEdit.positionAt(mouse.x, mouse.y);
+                //console.log("Start pos:"+startPosition);
+                //console.log("Length:"+objTextField.text.length);
+                if(objTextEdit.text.length === 0)
+                {
+                    objTextField.cursorPosition = 0;
+                }
+                else
+                {
+                    objTextEdit.cursorPosition = startPosition;
+                }
+                objTextEdit.focus = false;
+                objTextEdit.forceActiveFocus();
+                if (mouse.button === Qt.RightButton)
+                {
+
+                }
+            }
+            onPressed: {
+                //console.log("Pressed:");
+                var startPosition = objTextEdit.positionAt(mouse.x, mouse.y);
+                if(startPosition>objTextEdit.text.length) objTextEdit.cursorPosition = startPosition;
+                else objTextEdit.cursorPosition = objTextEdit.text.length;
+                objTextEdit.forceActiveFocus();
+            }
+        }//MouseArea
 
 
     }
