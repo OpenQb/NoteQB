@@ -164,6 +164,10 @@ Item {
 
     function openNote(title,manager,pk,index){
         console.log("Open Note");
+        console.log("Manager:"+manager);
+        console.log("pk:"+pk);
+        console.log("index:"+index);
+
         if(!objOneOneMap.isKeyExists(pk))
         {
             var m = {};

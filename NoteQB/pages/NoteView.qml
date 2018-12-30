@@ -14,12 +14,39 @@ ZeUi.ZPage{
     title: "Note View"
 
     property variant pk: null;
-    property Models.NQBNoteFile noteFile: null
-    property Core.NQBNoteManager noteManager: null
+    property QtObject noteFile: null
+    property var noteManager: null
     contextDock: objContextDock
 
+    onNoteFileChanged: {
+        if(noteFile)
+        {
+            noteFile.one();
+            objTextEdit.text = noteFile.note;
+        }
+    }
+
+    onPageClosing: {
+        if(noteManager)
+        {
+            if(noteFile) noteManager.releaseNoteFile(noteFile);
+        }
+    }
     onPageCreated: {
-        //console.log(objMainAppUi);
+        if(noteManager)
+        {
+            if(pk)
+            {
+                if(noteManager.isNoteFileExists(pk))
+                {
+                    noteFile = noteManager.getNoteFile(pk);
+                }
+                else
+                {
+                    noteFile = noteManager.createNoteFile(pk);
+                }
+            }
+        }
     }
 
     onSelectedContextDockItem: {
@@ -28,10 +55,21 @@ ZeUi.ZPage{
         {
             QbUtil.getObject("com.cliodin.qb.NoteQB.NQBOne").closeCurrentNote();
         }
+        else if(title === "Save")
+        {
+            if(noteFile)
+            {
+                noteFile.update();
+            }
+        }
     }
 
     ListModel{
         id: objContextDock
+        ListElement{
+            icon: "mf-save"
+            title: "Save"
+        }
         ListElement{
             icon: "mf-cancel"
             title: "Close"
@@ -45,6 +83,17 @@ ZeUi.ZPage{
 
     Rectangle{
         anchors.fill: parent
+
+        TextEdit{
+            id: objTextEdit
+            anchors.fill: parent
+            onTextChanged: {
+                if(noteFile)
+                {
+                    noteFile.note = text;
+                }
+            }
+        }
 
 
     }

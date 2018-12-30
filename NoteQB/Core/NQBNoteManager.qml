@@ -48,6 +48,32 @@ Item {
         return noteGroupQuery.count() === 1;
     }
 
+    function isNoteFileExists(pk){
+        objORM.queryModel.setModel(objORM.noteFile);
+        objORM.queryModel.resetFilters();
+        objORM.queryModel.filter("pk",QbORMFilter.EQUAL, pk);
+        return objORM.queryModel.count() === 1;
+    }
+
+    function releaseNoteFile(nf){
+        objORM.releaseModel(nf);
+    }
+
+    function createNoteFile(pk){
+        var m = objORM.newModel2(objORM.noteFile);
+        m.pk = pk;
+        m.note = "";
+        m.bnote = "";
+        m.save();
+        return m;
+    }
+
+    function getNoteFile(pk){
+        var m = objORM.newModel2(objORM.noteFile);
+        m.pk = pk;
+        return m;
+    }
+
     function trashByIndex(index){
         var nnote = objORM.noteQuery.at(index);
         nnote.status = 1;
