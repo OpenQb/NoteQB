@@ -21,8 +21,13 @@ ZeUi.ZAppUi{
         property alias windowX: objMainAppUi.windowX
         property alias windowY: objMainAppUi.windowY
     }
+    Component.onDestruction: {
+        QbUtil.removeObject("com.cliodin.qb.NoteQB")
+    }
 
     Component.onCompleted: {
+        QbUtil.addObject("com.cliodin.qb.NoteQB",objMainAppUi);
+
         var theme = {};
         theme["primary"] = "#004361";
         theme["secondary"] = "#007290";

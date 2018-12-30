@@ -9,8 +9,9 @@ import "./../../ZeUi" as ZeUi
 
 Item {
     id: objNQBOne
-
+    objectName: "com.cliodin.qb.NoteQB.NQBOne"
     property string lastPath;
+    property Item appUi: null;
 
     signal error(string errorText);
     signal refresh();
@@ -21,6 +22,15 @@ Item {
 
     onError: {
         console.log(errorText);
+    }
+
+    Component.onCompleted: {
+        console.log("NQBOne created.");
+        QbUtil.addObject("com.cliodin.qb.NoteQB.NQBOne",objNQBOne);
+    }
+
+    Component.onDestruction: {
+        QbUtil.removeObject("com.cliodin.qb.NoteQB.NQBOne");
     }
 
     QbSettings{
@@ -182,6 +192,12 @@ Item {
             return true;
         }
         return false;
+    }
+
+    function closeCurrentNote(){
+        var i = QbUtil.getObject("com.cliodin.qb.NoteQB").pageView.currentIndex;
+        QbUtil.getObject("com.cliodin.qb.NoteQB").closePage(i);
+        objOneOneMap.remove(i);
     }
 
     function deleteNote(title,manager,pk,index){
