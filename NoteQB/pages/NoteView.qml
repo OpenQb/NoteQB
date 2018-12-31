@@ -15,12 +15,20 @@ ZeUi.ZPage{
     title: "Note View"
 
     property variant pk: null;
-    property QtObject noteFile: null
-    property var noteManager: null
+    property var noteManager: null;
+    property QtObject noteFile: null;
+    property QtObject noteMeta: null;
 
     contextDock: objContextDock
 
     //Keys.forwardTo: [objFlickArea,objTextEdit]
+
+    QtObject{
+        id: objNoteMeta
+        property bool isAutoSave: false
+        property bool showLineNumbers: true
+        property int fontSize: 10
+    }
 
     onNoteFileChanged: {
         if(noteFile)
@@ -33,7 +41,23 @@ ZeUi.ZPage{
     onPageClosing: {
         if(noteManager)
         {
-            if(noteFile) noteManager.releaseNoteFile(noteFile);
+            if(noteFile)
+            {
+                if(objNoteMeta.isAutoSave)
+                {
+                    noteFile.update();
+                }
+                noteManager.releaseNoteFile(noteFile);
+            }
+
+
+            if(noteMeta)
+            {
+                noteMeta.meta = QbUtil.objectToMap(objNoteMeta);
+                noteMeta.update();
+                noteManager.releaseNoteMeta(noteMeta);
+            }
+
         }
     }
 
@@ -43,6 +67,9 @@ ZeUi.ZPage{
         {
             if(pk)
             {
+                noteMeta = noteManager.getNoteMeta(pk);
+                QbUtil.setMapToObject(noteMeta.meta,objNoteMeta);
+
                 if(noteManager.isNoteFileExists(pk))
                 {
                     noteFile = noteManager.getNoteFile(pk);
@@ -80,10 +107,10 @@ ZeUi.ZPage{
             icon: "mf-cancel"
             title: "Close"
         }
-//        ListElement{
-//            icon: "mf-refresh"
-//            title: "Refresh"
-//        }
+        //        ListElement{
+        //            icon: "mf-refresh"
+        //            title: "Refresh"
+        //        }
     }
 
 
@@ -97,6 +124,10 @@ ZeUi.ZPage{
         else if(event.key === Qt.Key_Up)
         {
             objScrollBar.decrease();
+        }
+        else if ((event.key === Qt.Key_S) && (event.modifiers & Qt.ControlModifier))
+        {
+            objPage.noteFile.update();
         }
     }
     Keys.onReleased: {
@@ -130,7 +161,7 @@ ZeUi.ZPage{
             Material.theme: Material.Light
 
             ScrollBar.vertical: ScrollBar {
-              id: objScrollBar
+                id: objScrollBar
             }
 
             function ensureVisible(r)

@@ -74,6 +74,18 @@ Item {
         return m;
     }
 
+    function getNoteMeta(pk){
+        var m = objORM.newModel2(objORM.noteMeta);
+        m.pk = pk;
+        if(m.isExists()) m.one();
+        else m.save();
+        return m;
+    }
+
+    function releaseNoteMeta(nf){
+        objORM.releaseModel(nf);
+    }
+
     function trashByIndex(index){
         var nnote = objORM.noteQuery.at(index);
         nnote.status = 1;
