@@ -30,6 +30,7 @@ ZeUi.ZAppUi{
     Component.onCompleted: {
         QbUtil.addAppObject(objMainAppUi.appId,"appUi",objMainAppUi);
         QbUtil.addAppObject(objMainAppUi.appId,"ZBLib",ZeUi.ZBLib);
+        QbUtil.addAppObject(objMainAppUi.appId,"ZBTheme",ZeUi.ZBTheme);
         QbUtil.addAppObject(objMainAppUi.appId,"NQBOne",NQBOne);
         NQBOne.appId = objMainAppUi.appId;
 

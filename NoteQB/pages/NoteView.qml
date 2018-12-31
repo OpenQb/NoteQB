@@ -19,6 +19,11 @@ ZeUi.ZPage{
     property QtObject noteFile: null;
     property QtObject noteMeta: null;
 
+    property bool isReadOnly: true;
+    property bool isNoteChanged: false;
+    property bool showLoadingScreen: objTimer.running;
+
+
     contextDock: objContextDock
 
     //Keys.forwardTo: [objFlickArea,objTextEdit]
@@ -30,13 +35,40 @@ ZeUi.ZPage{
         property int fontSize: 10
     }
 
-    onNoteFileChanged: {
-        if(noteFile)
-        {
-            noteFile.one();
-            objTextEdit.text = noteFile.note;
+    Timer{
+        id: objTimer
+        interval: 500
+
+        repeat: false
+        running: false
+        onTriggered: {
+            objTimer.stop();
+            objTextViewer.text = noteFile.note;
+            objPage.isNoteChanged = false;
         }
     }
+
+    onIsReadOnlyChanged: {
+        if(isReadOnly)
+        {
+            objContextDock.get(0).icon = "mf-lock";
+            objContextDock.get(0).title = "Locked";
+        }
+        else
+        {
+            objContextDock.get(0).icon = "mf-lock_open";
+            objContextDock.get(0).title = "Unlocked";
+            objTextViewer.textEditItem.forceActiveFocus();
+        }
+    }
+
+//    onNoteFileChanged: {
+//        if(noteFile)
+//        {
+//            noteFile.one();
+//            objTextViewer.text = noteFile.note;
+//        }
+//    }
 
     onPageClosing: {
         if(noteManager)
@@ -73,6 +105,10 @@ ZeUi.ZPage{
                 if(noteManager.isNoteFileExists(pk))
                 {
                     noteFile = noteManager.getNoteFile(pk);
+                    noteFile.one();
+                    //objPage.showLoadingScreen = true;
+                    //objTextViewer.text = noteFile.note;
+                    objTimer.start();
                 }
                 else
                 {
@@ -80,6 +116,7 @@ ZeUi.ZPage{
                 }
             }
         }
+        objPage.isNoteChanged = false;
     }
 
     onSelectedContextDockItem: {
@@ -88,17 +125,31 @@ ZeUi.ZPage{
         {
             QbUtil.getAppObject(objPage.appId,"NQBOne").closeCurrentNote();
         }
+        else if(title === "Locked" || title === "Unlocked")
+        {
+            objPage.isReadOnly = !objPage.isReadOnly;
+        }
         else if(title === "Save")
         {
             if(noteFile)
             {
-                noteFile.update();
+                if(objPage.isNoteChanged)
+                {
+                    if(noteFile.update())
+                    {
+                        objPage.isNoteChanged = false;
+                    }
+                }
             }
         }
     }
 
     ListModel{
         id: objContextDock
+        ListElement{
+            icon: "mf-lock"
+            title: "Locked"
+        }
         ListElement{
             icon: "mf-save"
             title: "Save"
@@ -107,10 +158,6 @@ ZeUi.ZPage{
             icon: "mf-cancel"
             title: "Close"
         }
-        //        ListElement{
-        //            icon: "mf-refresh"
-        //            title: "Refresh"
-        //        }
     }
 
 
@@ -119,11 +166,11 @@ ZeUi.ZPage{
         console.log(event);
         if(event.key === Qt.Key_Down)
         {
-            objScrollBar.increase();
+            objTextViewer.scrollBarItem.increase();
         }
         else if(event.key === Qt.Key_Up)
         {
-            objScrollBar.decrease();
+            objTextViewer.scrollBarItem.decrease();
         }
         else if ((event.key === Qt.Key_S) && (event.modifiers & Qt.ControlModifier))
         {
@@ -141,92 +188,174 @@ ZeUi.ZPage{
     }
 
     Keys.onTabPressed: {
-        objTextEdit.forceActiveFocus();
+        objTextViewer.textEditItem.forceActiveFocus();
     }
 
 
     Rectangle{
         anchors.fill: parent
-
-
-
-        Flickable {
-            id: objFlickArea
-            anchors.fill: parent
-            contentWidth: parent.width
-            contentHeight: objTextEdit.paintedHeight
-            clip: true
+        Comp.NQBTextViewer{
+            id: objTextViewer
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.top: parent.top
+            readOnly: objPage.isReadOnly
             Material.background: ZeUi.ZBTheme.background
             Material.accent: ZeUi.ZBTheme.accent
             Material.theme: Material.Light
-
-            ScrollBar.vertical: ScrollBar {
-                id: objScrollBar
-            }
-
-            function ensureVisible(r)
-            {
-                if (contentX >= r.x)
-                    contentX = r.x;
-                else if (contentX+width <= r.x+r.width)
-                    contentX = r.x+r.width-width;
-                if (contentY >= r.y)
-                    contentY = r.y;
-                else if (contentY+height <= r.y+r.height)
-                    contentY = r.y+r.height-height;
-            }
-
-            TextEdit {
-                id: objTextEdit
-                width: objFlickArea.width
-                wrapMode: TextEdit.Wrap
-                onCursorRectangleChanged: objFlickArea.ensureVisible(cursorRectangle)
-                activeFocusOnPress: false
-                textFormat: TextEdit.PlainText
-                inputMethodHints: TextEdit.ImhNoPredictiveText
-
-                onTextChanged: {
-                    if(noteFile)
-                    {
-                        noteFile.note = text;
-                    }
+            onTextChanged: {
+                if(noteFile)
+                {
+                    noteFile.note = text;
                 }
+                objPage.isNoteChanged = true;
             }
-        }//Flickable
+        }
+
+
+
+        //        Flickable {
+        //            id: objFlickArea
+        //            anchors.fill: parent
+        //            contentWidth: parent.width
+        //            contentHeight: objTextEdit.paintedHeight
+        //            clip: true
+        //            Material.background: ZeUi.ZBTheme.background
+        //            Material.accent: ZeUi.ZBTheme.accent
+        //            Material.theme: Material.Light
+
+        //            ScrollBar.vertical: ScrollBar {
+        //                id: objScrollBar
+        //            }
+
+        //            function ensureVisible(cursor)
+        //            {
+        //                if (objTextEdit.currentLine === 1)
+        //                    contentY = 0
+        //                else if (objTextEdit.currentLine === objTextEdit.lineCount && objFlickArea.visibleArea.heightRatio < 1)
+        //                    contentY = contentHeight - height
+        //                else
+        //                {
+        //                    if (contentY >= cursor.y)
+        //                        contentY = cursor.y
+        //                    else if (contentY + height <= cursor.y + cursor.height)
+        //                        contentY = cursor.y + cursor.height - height
+        //                }
+        //            }
+
+        //            TextEdit {
+        //                id: objTextEdit
+        //                width: objFlickArea.width
+        //                readOnly: objPage.isReadOnly
+        //                wrapMode: TextEdit.Wrap
+        //                onCursorRectangleChanged: objFlickArea.ensureVisible(cursorRectangle)
+        //                activeFocusOnPress: false
+        //                textFormat: TextEdit.PlainText
+        //                inputMethodHints: TextEdit.ImhNoPredictiveText
+
+        //                property int currentLine: cursorRectangle.y / cursorRectangle.height + 1
+
+        //                onTextChanged: {
+        //                    if(noteFile)
+        //                    {
+        //                        noteFile.note = text;
+        //                    }
+        //                    objPage.isNoteChanged = true;
+        //                }
+        //            }
+        //        }//Flickable
+
+        //        MouseArea{
+        //            anchors.fill: parent
+        //            acceptedButtons: Qt.LeftButton | Qt.RightButton
+        //            preventStealing: true
+        //            onClicked: {
+        //                //console.log("Clicked:");
+        //                if(!objPage.isReadOnly)
+        //                {
+        //                    var startPosition = objTextEdit.positionAt(mouse.x, mouse.y);
+        //                    console.log("Start pos:"+startPosition);
+        //                    //console.log("Length:"+objTextField.text.length);
+        //                    if(objTextEdit.text.length === 0)
+        //                    {
+        //                        objTextEdit.cursorPosition = 0;
+        //                    }
+        //                    else
+        //                    {
+        //                        if(startPosition<objTextEdit.text.length)
+        //                        {
+        //                            objTextEdit.cursorPosition = startPosition;
+        //                        }
+        //                        else
+        //                        {
+        //                            objTextEdit.cursorPosition = objTextEdit.text.length;
+        //                        }
+        //                    }
+
+        //                }
+
+        //                objTextEdit.focus = false;
+        //                objTextEdit.forceActiveFocus();
+        //                if (mouse.button === Qt.RightButton)
+        //                {
+
+        //                }
+        //            }
+        //            onPressed: {
+        //                //console.log("Pressed:");
+        //                if(!objPage.isReadOnly)
+        //                {
+        //                    var startPosition = objTextEdit.positionAt(mouse.x, mouse.y);
+        //                    if(startPosition<objTextEdit.text.length) objTextEdit.cursorPosition = startPosition;
+        //                    else objTextEdit.cursorPosition = objTextEdit.text.length;
+        //                }
+
+        //                objTextEdit.forceActiveFocus();
+        //            }
+        //        }//MouseArea
+
+
+    }//Rectangle
+
+
+
+    Rectangle{
+        visible: objPage.showLoadingScreen
+        anchors.fill: parent
+        color: objPage.appUi.mCT("black",150)
+        Text{
+            id: objBusyIndicator
+            width: 30
+            height: 30
+            anchors.right: parent.right
+            anchors.top: parent.top
+            text: QbFA.icon("fa-spinner")
+            color: objPage.appUi.zBaseTheme.metaTheme.textColor(objPage.appUi.zBaseTheme.metaTheme.primary)
+            font.pixelSize: 20
+            font.family: QbFA.family
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            visible: objPage.showLoadingScreen
+            RotationAnimation on rotation {
+                loops: Animation.Infinite
+                from: 0
+                to: 360
+                direction: RotationAnimation.Clockwise
+                duration: 1000
+            }
+        }
 
         MouseArea{
             anchors.fill: parent
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
             preventStealing: true
             onClicked: {
-                //console.log("Clicked:");
-                var startPosition = objTextEdit.positionAt(mouse.x, mouse.y);
-                //console.log("Start pos:"+startPosition);
-                //console.log("Length:"+objTextField.text.length);
-                if(objTextEdit.text.length === 0)
-                {
-                    objTextEdit.cursorPosition = 0;
-                }
-                else
-                {
-                    objTextEdit.cursorPosition = startPosition;
-                }
-                objTextEdit.focus = false;
-                objTextEdit.forceActiveFocus();
-                if (mouse.button === Qt.RightButton)
-                {
-
-                }
+            }
+            onDoubleClicked: {
             }
             onPressed: {
-                //console.log("Pressed:");
-                var startPosition = objTextEdit.positionAt(mouse.x, mouse.y);
-                if(startPosition>objTextEdit.text.length) objTextEdit.cursorPosition = startPosition;
-                else objTextEdit.cursorPosition = objTextEdit.text.length;
-                objTextEdit.forceActiveFocus();
             }
-        }//MouseArea
-
-
+        }
     }
+
 }
