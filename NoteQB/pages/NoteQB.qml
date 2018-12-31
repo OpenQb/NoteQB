@@ -7,7 +7,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
 
 import "./../../ZeUi" as ZeUi
-import "./../Core" as Core
+import "./../../NoteQB"
 import "./../Comp" as Comp
 
 
@@ -117,7 +117,7 @@ ZeUi.ZPage{
     QbORMQueryModel{
         id: objNoteDbQueryModel
         limit: 1000
-        query: Core.NQBOne.noteDbModelORM.noteDbModelQuery
+        query: NQBOne.noteDbModelORM.noteDbModelQuery
         onTotalItemsChanged: {
             console.log("Total items:"+totalItems);
         }
@@ -127,7 +127,7 @@ ZeUi.ZPage{
     }
 
     Connections{
-        target: Core.NQBOne
+        target: NQBOne
         onRefresh:{
             refreshNoteDbListView();
         }
@@ -196,11 +196,11 @@ ZeUi.ZPage{
 
                     Keys.onReturnPressed: {
                         event.accepted = true;
-                        Core.NQBOne.openNoteDb(path);
+                        NQBOne.openNoteDb(path);
                     }
                     Keys.onEnterPressed: {
                         event.accepted = true;
-                        Core.NQBOne.openNoteDb(path);
+                        NQBOne.openNoteDb(path);
                     }
                     Rectangle{
                         id: objDelegateBackground
@@ -265,7 +265,7 @@ ZeUi.ZPage{
                             }
                             onDoubleClicked: {
                                 objNoteDbListView.currentIndex = index;
-                                Core.NQBOne.openNoteDb(path);
+                                NQBOne.openNoteDb(path);
                             }
                             onPressAndHold: {
                                 objNoteDbListView.currentIndex = index;
@@ -308,20 +308,20 @@ ZeUi.ZPage{
                                 MenuItem {
                                     text: "Open"
                                     onTriggered: {
-                                        Core.NQBOne.openNoteDb(path);
+                                        NQBOne.openNoteDb(path);
                                     }
                                 }
                                 MenuItem {
                                     text: "Close"
                                     onTriggered: {
-                                        Core.NQBOne.closeNoteDb(path);
+                                        NQBOne.closeNoteDb(path);
                                     }
                                 }
                                 MenuSeparator{}
                                 MenuItem {
                                     text: "Remove"
                                     onTriggered: {
-                                        Core.NQBOne.removeNoteDb(path)
+                                        NQBOne.removeNoteDb(path)
                                     }
                                 }
                             }
@@ -367,5 +367,7 @@ ZeUi.ZPage{
     onPageCreated: {
         objNoteQBPage.state = "xs";
         refreshNoteDbListView();
+        console.log("NoteQB page created.");
+        console.log("ZeUi:"+ZeUi.ZBLib);
     }
 }

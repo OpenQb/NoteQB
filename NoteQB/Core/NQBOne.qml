@@ -18,7 +18,8 @@ Item {
     signal requestForPassword();
 
     property alias noteDbModelORM: objORM;
-
+    property alias oneOneMap: objOneOneMap;
+    property string appId;
 
     onError: {
         console.log(errorText);
@@ -26,20 +27,13 @@ Item {
 
     Component.onCompleted: {
         console.log("NQBOne created.");
-        QbUtil.addObject("com.cliodin.qb.NoteQB.NQBOne",objNQBOne);
-    }
-
-    Component.onDestruction: {
-        QbUtil.removeObject("com.cliodin.qb.NoteQB.NQBOne");
+        objSettings.setAppId(ZeUi.ZBLib.appUi.appId);
     }
 
     QbSettings{
         id: objSettings
         name: "NQBOne"
         property alias lastPath: objNQBOne.lastPath
-        Component.onCompleted: {
-            objSettings.setAppId(ZeUi.ZBLib.appUi.appId);
-        }
     }
 
     QbOneOneMap{
@@ -115,12 +109,12 @@ Item {
                 m["isPasswordProtected"] = true;
             }
 
-            ZeUi.ZBLib.appUi.addPage("/NoteQB/pages/NoteDb.qml",m);
+            QbUtil.getAppObject(objNQBOne.appId,"appUi").addPage("/NoteQB/pages/NoteDb.qml",m);
         }
         else
         {
             var index = objOneOneMap.indexOfValue(path);
-            ZeUi.ZBLib.appUi.changePage(index);
+            QbUtil.getAppObject(objNQBOne.appId,"appUi").changePage(index);
         }
         return true;
     }
@@ -130,7 +124,7 @@ Item {
         if(objOneOneMap.isValueExists(path))
         {
             var index = objOneOneMap.indexOfValue(path);
-            ZeUi.ZBLib.appUi.closePage(index);
+            QbUtil.getAppObject(objNQBOne.appId,"appUi").closePage(index);
             objOneOneMap.remove(index);
             return true;
         }
@@ -151,13 +145,13 @@ Item {
         if(!objOneOneMap.isKeyExists(name))
         {
             objOneOneMap.append(name,path);
-            ZeUi.ZBLib.appUi.addPage(path,{});
+            QbUtil.getAppObject(objNQBOne.appId,"appUi").addPage(path,{});
             return true;
         }
         else
         {
             var index = objOneOneMap.indexOf(name);
-            ZeUi.ZBLib.appUi.changePage(index);
+            QbUtil.getAppObject(objNQBOne.appId,"appUi").changePage(index);
             return true;
         }
     }
@@ -175,7 +169,7 @@ Item {
             m["noteManager"] = manager;
             m["pk"] = pk;
             objOneOneMap.append(pk,title);
-            ZeUi.ZBLib.appUi.addPage("NoteQB/pages/NoteView.qml",m);
+            QbUtil.getAppObject(objNQBOne.appId,"appUi").addPage("NoteQB/pages/NoteView.qml",m);
             return true;
         }
         else
@@ -191,7 +185,7 @@ Item {
         if(objOneOneMap.isKeyExists(pk))
         {
             var pindex = objOneOneMap.indexOf(pk);
-            ZeUi.ZBLib.appUi.closePage(pindex);
+            QbUtil.getAppObject(objNQBOne.appId,"appUi").closePage(pindex);
             objOneOneMap.remove(pindex);
             return true;
         }
@@ -199,8 +193,8 @@ Item {
     }
 
     function closeCurrentNote(){
-        var i = QbUtil.getObject("com.cliodin.qb.NoteQB").pageView.currentIndex;
-        QbUtil.getObject("com.cliodin.qb.NoteQB").closePage(i);
+        var i = QbUtil.getAppObject(objNQBOne.appId,"appUi").pageView.currentIndex;
+        ZeUi.ZBLib.appUi.closePage(i);
         objOneOneMap.remove(i);
     }
 

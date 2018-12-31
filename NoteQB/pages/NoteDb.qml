@@ -7,7 +7,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
 
 import "./../../ZeUi" as ZeUi
-import "./../Core" as Core
+import "./../../NoteQB"
 import "./../Comp" as Comp
 import "./NoteDBComp" as NoteDBComp
 
@@ -78,6 +78,7 @@ ZeUi.ZPage{
 
     onPageCreated: {
         console.log("NoteDb page created");
+        console.log("ZeUi:"+ZeUi.ZBLib);
 
 
         /*set isDbReady flag*/
@@ -123,7 +124,7 @@ ZeUi.ZPage{
     }
 
     /*Non Visual Core Items here*/
-    Core.NQBNoteManager{
+    NQBNoteManager{
         id: objNoteManager
         dbPath: objPage.path
         dbDriver: objPage.isPasswordProtected?"BEESD":"QSQLITE"

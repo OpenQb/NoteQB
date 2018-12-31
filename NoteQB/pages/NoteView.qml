@@ -1,13 +1,14 @@
 import Qb 1.0
+import Qb.ORM 1.0
 import Qb.Core 1.0
+
 import QtQuick 2.10
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
 
 import "./../../ZeUi" as ZeUi
 import "./../Comp" as Comp
-import "./../Core" as Core
-import "./../Models" as Models
+
 
 ZeUi.ZPage{
     id: objPage
@@ -16,6 +17,7 @@ ZeUi.ZPage{
     property variant pk: null;
     property QtObject noteFile: null
     property var noteManager: null
+
     contextDock: objContextDock
 
     //Keys.forwardTo: [objFlickArea,objTextEdit]
@@ -34,7 +36,9 @@ ZeUi.ZPage{
             if(noteFile) noteManager.releaseNoteFile(noteFile);
         }
     }
+
     onPageCreated: {
+        console.log("NoteView page created.");
         if(noteManager)
         {
             if(pk)
@@ -55,7 +59,7 @@ ZeUi.ZPage{
         //title
         if(title === "Close")
         {
-            QbUtil.getObject("com.cliodin.qb.NoteQB.NQBOne").closeCurrentNote();
+            QbUtil.getAppObject(objPage.appId,"NQBOne").closeCurrentNote();
         }
         else if(title === "Save")
         {
@@ -76,10 +80,10 @@ ZeUi.ZPage{
             icon: "mf-cancel"
             title: "Close"
         }
-        ListElement{
-            icon: "mf-refresh"
-            title: "Refresh"
-        }
+//        ListElement{
+//            icon: "mf-refresh"
+//            title: "Refresh"
+//        }
     }
 
 
@@ -102,7 +106,7 @@ ZeUi.ZPage{
 
     Keys.onEscapePressed: {
         event.accepted = true;
-        QbUtil.getObject("com.cliodin.qb.NoteQB").dockView.forceActiveFocus();
+        QbUtil.getAppObject(objPage.appId,"appUi").dockView.forceActiveFocus();
     }
 
     Keys.onTabPressed: {
@@ -170,7 +174,7 @@ ZeUi.ZPage{
                 //console.log("Length:"+objTextField.text.length);
                 if(objTextEdit.text.length === 0)
                 {
-                    objTextField.cursorPosition = 0;
+                    objTextEdit.cursorPosition = 0;
                 }
                 else
                 {

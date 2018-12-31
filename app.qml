@@ -2,8 +2,9 @@ import Qb 1.0
 import Qb.Core 1.0
 import QtQuick 2.10
 
+
 import "ZeUi" as ZeUi
-import "./NoteQB/Core" as Core
+import "./NoteQB"
 
 ZeUi.ZAppUi{
     id: objMainAppUi
@@ -21,12 +22,16 @@ ZeUi.ZAppUi{
         property alias windowX: objMainAppUi.windowX
         property alias windowY: objMainAppUi.windowY
     }
+
     Component.onDestruction: {
-        QbUtil.removeObject("com.cliodin.qb.NoteQB")
+        QbUtil.cleanAppObject(objMainAppUi.appId);
     }
 
     Component.onCompleted: {
-        QbUtil.addObject("com.cliodin.qb.NoteQB",objMainAppUi);
+        QbUtil.addAppObject(objMainAppUi.appId,"appUi",objMainAppUi);
+        QbUtil.addAppObject(objMainAppUi.appId,"ZBLib",ZeUi.ZBLib);
+        QbUtil.addAppObject(objMainAppUi.appId,"NQBOne",NQBOne);
+        NQBOne.appId = objMainAppUi.appId;
 
         var theme = {};
         theme["primary"] = "#004361";
@@ -44,7 +49,7 @@ ZeUi.ZAppUi{
         }
         else
         {
-            Core.NQBOne.addPage("##NoteQB##","/NoteQB/pages/NoteQB.qml");
+            NQBOne.addPage("##NoteQB##","/NoteQB/pages/NoteQB.qml");
         }
     }
 }
