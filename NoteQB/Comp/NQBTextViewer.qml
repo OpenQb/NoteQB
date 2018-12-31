@@ -470,7 +470,7 @@ Item {
                 property int endPosition
 
                 onPressed: {
-                    console.log("Pressed");
+                    //console.log("Pressed");
                     textEdit.contextMenu.visible = false;
 
                     startX = mouse.x;
