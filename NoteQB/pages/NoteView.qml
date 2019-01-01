@@ -22,11 +22,22 @@ ZeUi.ZPage{
     property bool isReadOnly: true;
     property bool isNoteChanged: false;
     property bool showLoadingScreen: objTimer.running;
+    property bool isSaving: false
 
 
     contextDock: objContextDock
 
     //Keys.forwardTo: [objFlickArea,objTextEdit]
+    onIsSavingChanged: {
+        if(isSaving)
+        {
+            objContextDock.append({"icon":"mf-loop","title":"Saving"});
+        }
+        else
+        {
+            objContextDock.remove(objContextDock.count - 1);
+        }
+    }
 
     QtObject{
         id: objNoteMeta
@@ -135,9 +146,11 @@ ZeUi.ZPage{
             {
                 if(objPage.isNoteChanged)
                 {
+                    objPage.isSaving = true;
                     if(noteFile.update())
                     {
                         objPage.isNoteChanged = false;
+                        objPage.isSaving = false;
                     }
                 }
             }
@@ -174,7 +187,15 @@ ZeUi.ZPage{
         }
         else if ((event.key === Qt.Key_S) && (event.modifiers & Qt.ControlModifier))
         {
-            objPage.noteFile.update();
+            if(objPage.isNoteChanged)
+            {
+                objPage.isSaving = true;
+                if(objPage.noteFile.update())
+                {
+                    objPage.isNoteChanged = false;
+                    objPage.isSaving = false;
+                }
+            }
         }
     }
     Keys.onReleased: {
