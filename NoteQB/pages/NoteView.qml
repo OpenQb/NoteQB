@@ -1,6 +1,7 @@
 import Qb 1.0
 import Qb.ORM 1.0
 import Qb.Core 1.0
+import Qb.QbSyntax 1.0
 
 import QtQuick 2.10
 import QtQuick.Controls 2.2
@@ -151,6 +152,11 @@ ZeUi.ZPage{
             }
         }
         objPage.isNoteChanged = false;
+
+        if(QbUtil.stringIEndsWith(objPage.title,".md"))
+        {
+            objSyntaxHighlighter.setHighlighter(objTextViewer.textEditItem);
+        }
     }
 
     onSelectedContextDockItem: {
@@ -266,6 +272,11 @@ ZeUi.ZPage{
                     noteFile.note = text;
                 }
                 objPage.isNoteChanged = true;
+            }
+
+            QbSyntax{
+                id: objSyntaxHighlighter
+                highlighterName: "markdown"
             }
         }
 
