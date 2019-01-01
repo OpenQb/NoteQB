@@ -63,6 +63,17 @@ ZeUi.ZPage{
         {
             objPage.refresh();
         }
+        else if(title === "Search")
+        {
+            if(objSearchDialog.visible)
+            {
+                objSearchDialog.closeSearchWindow();
+            }
+            else
+            {
+                objSearchDialog.openSearchWindow();
+            }
+        }
         else if(title === "Groups")
         {
             if(objGroupList.visible)
@@ -89,6 +100,10 @@ ZeUi.ZPage{
         ListElement{
             icon: "mf-view_list"
             title: "Groups"
+        }
+        ListElement{
+            icon: "mf-search"
+            title: "Search"
         }
         ListElement{
             icon: "mf-refresh"
@@ -234,8 +249,7 @@ ZeUi.ZPage{
             id: objSearchBarPlaceHolder
             width: parent.width
             anchors.top: parent.top
-            height: 50
-
+            height: 0
         }
 
         NoteDBComp.NDbVSimpleNoteListView{
@@ -259,6 +273,16 @@ ZeUi.ZPage{
 
 
     /* All dialogs here */
+    Comp.NQBSearchDialog{
+        id: objSearchDialog
+        anchors.fill: parent
+        color: appUi.mCT("black",150)
+        onSearchTermChanged:
+        {
+            objNoteManager.fullTextSearch(objSearchDialog.searchTerm);
+        }
+    }
+
     Comp.NQBAddNote{
         id: objAddNote
         anchors.fill: parent

@@ -160,6 +160,9 @@ Item {
         objNoteManager.noteQuery.innerJoin("NQBNoteFile");
         objNoteManager.noteQuery.jand_("NQBNote.status", QbORMFilter.EQUAL, 0);
         objNoteManager.noteQuery.jand_("NQBNoteFile.note", QbORMFilter.CONTAINS, s);
+        //objNoteManager.noteQuery.jor_("NQBNote.name", QbORMFilter.CONTAINS, s);
+        //objNoteManager.noteQuery.jor_("NQBNote.group", QbORMFilter.CONTAINS, s);
+        //objNoteManager.noteQuery.jor_("NQBNote.tags", QbORMFilter.CONTAINS, s);
         objNoteManager.noteQuery.page(objNoteManager.currentPage, objNoteManager.limit);
     }
 
