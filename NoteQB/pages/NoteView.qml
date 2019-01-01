@@ -188,7 +188,14 @@ ZeUi.ZPage{
     }
 
     Keys.onTabPressed: {
-        objTextViewer.textEditItem.forceActiveFocus();
+        //console.log("TAB");
+        event.accepted = true;
+        if(objPage.isReadOnly){
+            QbUtil.getAppObject(objPage.appId,"appUi").dockView.forceActiveFocus();
+        }
+        else{
+            objTextViewer.textEditItem.forceActiveFocus();
+        }
     }
 
 
