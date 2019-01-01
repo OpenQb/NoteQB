@@ -254,15 +254,11 @@ ZeUi.ZPage{
         anchors.fill: parent
         Comp.NQBTextViewer {
             id: objTextViewer
+            anchors.fill: parent
 
             Material.background: ZeUi.ZBTheme.background
             Material.accent: ZeUi.ZBTheme.accent
             Material.theme: Material.Light
-
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.top: parent.top
 
             readOnly: objPage.isReadOnly
 

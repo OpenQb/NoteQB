@@ -95,6 +95,7 @@ ZeUi.ZPage{
             title: "Refresh"
         }
     }
+
     ZeUi.ZBListMenu{
         id: objGroupList
         title: "Groups"
@@ -187,6 +188,16 @@ ZeUi.ZPage{
     function refresh()
     {
         objNoteManager.refresh();
+    }
+
+    function search(term)
+    {
+        objNoteManager.search(term);
+    }
+
+    function fullTextSearch(term)
+    {
+        objNoteManager.fullTextSearch(term);
     }
 
     function setGroupValueList(values)

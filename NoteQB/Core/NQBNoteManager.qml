@@ -48,14 +48,16 @@ Item {
         return noteGroupQuery.count() === 1;
     }
 
-    function isNoteFileExists(pk){
+    function isNoteFileExists(pk)
+    {
         objORM.queryModel.setModel(objORM.noteFile);
         objORM.queryModel.resetFilters();
         objORM.queryModel.filter("pk",QbORMFilter.EQUAL, pk);
         return objORM.queryModel.count() === 1;
     }
 
-    function releaseNoteFile(nf){
+    function releaseNoteFile(nf)
+    {
         objORM.releaseModel(nf);
     }
 
@@ -125,6 +127,45 @@ Item {
         var values = objORM.queryModel.distinctValueList("group");
         //console.log(JSON.stringify(values));
         return values;
+    }
+
+    function search(term)
+    {
+        var s = "";
+        if(term)
+        {
+            s = term;
+        }
+
+        objNoteManager.currentPage = 1;
+        objNoteManager.noteQuery.resetFilters();
+        objNoteManager.noteQuery.filter("status", QbORMFilter.EQUAL, 0);
+        objNoteManager.noteQuery.and_("name", QbORMFilter.CONTAINS, s);
+        objNoteManager.noteQuery.or_("group", QbORMFilter.CONTAINS, s);
+        objNoteManager.noteQuery.or_("tags", QbORMFilter.CONTAINS, s);
+        objNoteManager.noteQuery.page(objNoteManager.currentPage, objNoteManager.limit);
+    }
+
+    function fullTextSearch(term)
+    {
+        var s = "";
+        if(term)
+        {
+            s = term;
+        }
+
+        objNoteManager.currentPage = 1;
+        objNoteManager.noteQuery.resetFilters();
+        objNoteManager.noteQuery.jfilter("NQBNote.pk", QbORMFilter.EXACT, "NQBNoteFile.pk");
+        objNoteManager.noteQuery.innerJoin("NQBNoteFile");
+        objNoteManager.noteQuery.jand_("NQBNote.status", QbORMFilter.EQUAL, 0);
+        objNoteManager.noteQuery.jand_("NQBNoteFile.note", QbORMFilter.CONTAINS, s);
+        objNoteManager.noteQuery.page(objNoteManager.currentPage, objNoteManager.limit);
+    }
+
+    function getPage(pno)
+    {
+        objNoteManager.noteQuery.page(pno, objNoteManager.limit);
     }
 
 
