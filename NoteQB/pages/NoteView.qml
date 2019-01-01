@@ -38,12 +38,35 @@ ZeUi.ZPage{
             objContextDock.remove(objContextDock.count - 1);
         }
     }
+    onIsNoteChangedChanged: {
+        if(isNoteChanged)
+        {
+            objContextDock.get(1).icon_rotation = 0;
+            objSaveRotation.start();
+        }
+        else
+        {
+            objSaveRotation.stop();
+            objContextDock.get(1).icon_rotation = 0;
+        }
+    }
 
     QtObject{
         id: objNoteMeta
         property bool isAutoSave: false
         property bool showLineNumbers: true
         property int fontSize: 10
+    }
+
+    Timer{
+        id: objSaveRotation
+        interval: 20
+        repeat: true
+        running: false
+        onTriggered: {
+            var r = objContextDock.get(1).icon_rotation+1;
+            objContextDock.get(1).icon_rotation = r;
+        }
     }
 
     Timer{
@@ -166,6 +189,7 @@ ZeUi.ZPage{
         ListElement{
             icon: "mf-save"
             title: "Save"
+            icon_rotation: 0
         }
         ListElement{
             icon: "mf-cancel"
