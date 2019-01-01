@@ -225,10 +225,37 @@ ZeUi.ZPage{
 
 
     /* Visual items here */
-    NoteDBComp.NDbVSimpleNoteListView{
-        id: objNoteListView
+
+    Rectangle{
         anchors.fill: parent
+        color: "lightgrey"
+
+        Item{
+            id: objSearchBarPlaceHolder
+            width: parent.width
+            anchors.top: parent.top
+            height: 50
+
+        }
+
+        NoteDBComp.NDbVSimpleNoteListView{
+            id: objNoteListView
+            clip: true
+            anchors.top: objSearchBarPlaceHolder.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: objBottomBarPlaceHolder.top
+        }
+
+        Item{
+            id: objBottomBarPlaceHolder
+            width: parent.width
+            height: 50
+            anchors.bottom: parent.bottom
+
+        }
     }
+
 
 
     /* All dialogs here */

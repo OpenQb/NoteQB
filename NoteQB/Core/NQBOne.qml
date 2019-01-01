@@ -15,7 +15,7 @@ Item {
 
     signal error(string errorText);
     signal refresh();
-    signal requestForPassword();
+    signal requestForPassword(string path);
 
     property alias noteDbModelORM: objORM;
     property alias oneOneMap: objOneOneMap;
@@ -88,7 +88,7 @@ Item {
         }
         else
         {
-            objNQBOne.requestForPassword();
+            objNQBOne.requestForPassword(path);
         }
     }
 

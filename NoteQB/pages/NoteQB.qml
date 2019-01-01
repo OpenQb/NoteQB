@@ -354,13 +354,15 @@ ZeUi.ZPage{
     Comp.NQBAddNoteDb{
         id: objAddNoteDb
         anchors.fill: parent
-        onNoteDbAdded: {
+        onNoteDbAdded:
+        {
             objAddNoteDb.close();
         }
     }
     /* end dialog space*/
 
-    function refreshNoteDbListView(){
+    function refreshNoteDbListView()
+    {
         objNoteDbQueryModel.search(["path","meta"]);
     }
 
