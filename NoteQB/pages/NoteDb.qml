@@ -259,6 +259,7 @@ ZeUi.ZPage{
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: objBottomBarPlaceHolder.top
+            noteQueryModel.limit: objNoteManager.limit
         }
 
         Item{
@@ -266,6 +267,40 @@ ZeUi.ZPage{
             width: parent.width
             height: 50
             anchors.bottom: parent.bottom
+
+            Row{
+                width: 100
+                height: 50
+                anchors.centerIn: parent
+                ZeUi.ZMRoundButton{
+                    text: QbMF3.icon("mf-navigate_before")
+                    font.family: QbMF3.family
+                    font.pixelSize: 20
+                    width: 50
+                    height: 50
+                    enabled: objNoteManager.currentPage>1
+                    onClicked: {
+                        objNoteManager.currentPage = objNoteManager.currentPage - 1;
+                        objNoteManager.getPage(objNoteManager.currentPage);
+                    }
+                }
+
+                ZeUi.ZMRoundButton{
+                    text: QbMF3.icon("mf-navigate_next")
+                    font.family: QbMF3.family
+                    font.pixelSize: 20
+                    width: 50
+                    height: 50
+                    enabled: objNoteManager.currentPage<objNoteListView.noteQueryModel.totalPages;
+                    onClicked: {
+                        //console.log("CLICKED");
+                        //console.log(objNoteListView.noteQueryModel.totalItems);
+                        //console.log(objNoteListView.noteQueryModel.totalPages);
+                        objNoteManager.currentPage = objNoteManager.currentPage + 1;
+                        objNoteManager.getPage(objNoteManager.currentPage);
+                    }
+                }
+            }
 
         }
     }

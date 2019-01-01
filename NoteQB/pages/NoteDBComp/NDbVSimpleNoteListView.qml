@@ -11,6 +11,7 @@ import "./../../Core" as Core
 Rectangle {
 
     property alias currentIndex: objNoteListView.currentIndex
+    property alias noteQueryModel: objNoteQueryModel
 
     QbORMQueryModel{
         id: objNoteQueryModel

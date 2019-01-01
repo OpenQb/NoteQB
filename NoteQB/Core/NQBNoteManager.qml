@@ -107,6 +107,7 @@ Item {
         {
             objNoteManager.noteQuery.resetFilters();
             objNoteManager.noteQuery.filter("status",QbORMFilter.EQUAL,0);
+            objNoteManager.noteQuery.total();
             objNoteManager.noteQuery.page(objNoteManager.currentPage,objNoteManager.limit);
         }
         else
@@ -114,6 +115,7 @@ Item {
             objNoteManager.noteQuery.resetFilters();
             objNoteManager.noteQuery.filter("group",QbORMFilter.EQUAL,objNoteManager.currentGroup);
             objNoteManager.noteQuery._and("status",QbORMFilter.EQUAL,0);
+            objNoteManager.noteQuery.total();
             objNoteManager.noteQuery.page(objNoteManager.currentPage,objNoteManager.limit);
         }
     }
@@ -143,6 +145,7 @@ Item {
         objNoteManager.noteQuery.and_("name", QbORMFilter.CONTAINS, s);
         objNoteManager.noteQuery.or_("group", QbORMFilter.CONTAINS, s);
         objNoteManager.noteQuery.or_("tags", QbORMFilter.CONTAINS, s);
+        objNoteManager.noteQuery.total();
         objNoteManager.noteQuery.page(objNoteManager.currentPage, objNoteManager.limit);
     }
 
@@ -163,11 +166,13 @@ Item {
         //objNoteManager.noteQuery.jor_("NQBNote.name", QbORMFilter.CONTAINS, s);
         //objNoteManager.noteQuery.jor_("NQBNote.group", QbORMFilter.CONTAINS, s);
         //objNoteManager.noteQuery.jor_("NQBNote.tags", QbORMFilter.CONTAINS, s);
+        objNoteManager.noteQuery.total();
         objNoteManager.noteQuery.page(objNoteManager.currentPage, objNoteManager.limit);
     }
 
     function getPage(pno)
     {
+        //objNoteManager.currentPage = pno;
         objNoteManager.noteQuery.page(pno, objNoteManager.limit);
     }
 
