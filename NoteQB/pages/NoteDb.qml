@@ -31,11 +31,22 @@ ZeUi.ZPage{
     Keys.forwardTo: [objNoteListView]
 
     onSelectedContextDockItem: {
+        if(title !== "Groups")
+        {
+            if(objGroupList.visible)
+            {
+                objGroupList.closeMenu();
+            }
+        }
+
         //title
         if(title === "Add Note")
         {
             objAddNote.isUpdate = false;
             objAddNote.resetFields();
+            var m2 = {};
+            m2["group"] = objNoteManager.currentGroup;
+            objAddNote.setDataMap(m2);
             objAddNote.open();
         }
         else if(title === "Edit Note")
@@ -51,6 +62,17 @@ ZeUi.ZPage{
         else if(title === "Refresh")
         {
             objPage.refresh();
+        }
+        else if(title === "Groups")
+        {
+            if(objGroupList.visible)
+            {
+                objGroupList.closeMenu();
+            }
+            else
+            {
+                objGroupList.openMenu(0,y);
+            }
         }
     }
 
@@ -71,6 +93,28 @@ ZeUi.ZPage{
         ListElement{
             icon: "mf-refresh"
             title: "Refresh"
+        }
+    }
+    ZeUi.ZBListMenu{
+        id: objGroupList
+        title: "Groups"
+        activeFocusOnTab: false
+
+        onSelectedItem: {
+            if(index === 0)
+            {
+                objNoteManager.currentGroup = "";
+                refresh();
+            }
+            else
+            {
+                objNoteManager.currentGroup = title;
+                refresh();
+            }
+            objGroupList.closeMenu();
+        }
+        menuItemModel: ListModel{
+            id: objGroupListModel
         }
     }
 
@@ -107,6 +151,7 @@ ZeUi.ZPage{
 
         if(objPage.isDbReady)
         {
+            objPage.setGroupValueList(objNoteManager.getGroupList());
             objPage.refresh();
         }
     }
@@ -144,6 +189,29 @@ ZeUi.ZPage{
         objNoteManager.refresh();
     }
 
+    function setGroupValueList(values)
+    {
+        objGroupListModel.clear();
+        objGroupListModel.append({"title":"All"});
+        if(values)
+        {
+            for(var i=0;i<values.length;++i)
+            {
+                objGroupListModel.append({"title":String(values[i])});
+            }
+        }
+    }
+
+    function taskAfterNoteAdd()
+    {
+        objPage.setGroupValueList(objNoteManager.getGroupList());
+    }
+
+    function taskAfterNoteUpdate()
+    {
+        taskAfterNoteAdd();
+    }
+
 
     /* Visual items here */
     NoteDBComp.NDbVSimpleNoteListView{
@@ -167,6 +235,7 @@ ZeUi.ZPage{
                         {
                             objAddNote.statusBarMessage = "Note updated";
                             objAddNote.close();
+                            objPage.taskAfterNoteUpdate();
                         }
                     }
                     else{
@@ -185,6 +254,7 @@ ZeUi.ZPage{
                     {
                         objAddNote.statusBarMessage = "Note added";
                         objAddNote.close();
+                        objPage.taskAfterNoteAdd();
                     }
                 }
                 else

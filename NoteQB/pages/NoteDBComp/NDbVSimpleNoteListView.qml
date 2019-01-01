@@ -88,7 +88,7 @@ Rectangle {
                         height: parent.height/objTextFields.totalItems
                         text: QbUtil.stringJoin(tags,",")
                         wrapMode: Text.NoWrap
-                        elide: Text.ElideMiddle
+                        elide: Text.ElideRight
                         font.family: height*0.70
                         color: ZeUi.ZBTheme.metaTheme.ilighter(ZeUi.ZBTheme.metaTheme.textColor(objDelegate.itemBgColor),50)
                     }

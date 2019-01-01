@@ -42,10 +42,19 @@ ZeUi.ZDialogUi2{
     }
 
     function setDataMap(m){
-        pkField = m["pk"];
-        nameField = m["name"];
-        groupField = m["group"];
-        tagsField = QbUtil.stringJoin(m["tags"],",");
+        //console.log(m.group);
+        if(m.pk){
+            pkField = m["pk"];
+        }
+        if(m.name){
+            nameField = m["name"];
+        }
+        if(m.group){
+            groupField = String(m["group"]);
+        }
+        if(m.tags){
+            tagsField = QbUtil.stringJoin(m["tags"],",");
+        }
     }
 
     function isValid(){
@@ -91,6 +100,9 @@ ZeUi.ZDialogUi2{
                 }
                 Component.onCompleted: {
                     if(objAddDialog.isUpdate){
+                        fieldText = objAddDialog.groupField;
+                    }
+                    else{
                         fieldText = objAddDialog.groupField;
                     }
                 }

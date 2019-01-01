@@ -116,6 +116,17 @@ Item {
         }
     }
 
+    function getGroupList()
+    {
+        objORM.queryModel.setModel(objORM.note);
+        objORM.queryModel.resetFilters();
+        objORM.queryModel.filter("status",QbORMFilter.EQUAL,0);
+        //objORM.queryModel.order("group");
+        var values = objORM.queryModel.distinctValueList("group");
+        //console.log(JSON.stringify(values));
+        return values;
+    }
+
 
     /**/
 
