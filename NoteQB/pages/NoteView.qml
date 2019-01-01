@@ -25,7 +25,6 @@ ZeUi.ZPage{
     property bool showLoadingScreen: objTimer.running;
     property bool isSaving: false
 
-
     contextDock: objContextDock
 
     //Keys.forwardTo: [objFlickArea,objTextEdit]
@@ -64,6 +63,7 @@ ZeUi.ZPage{
         interval: 20
         repeat: true
         running: false
+        triggeredOnStart: false
         onTriggered: {
             var r = objContextDock.get(1).icon_rotation+1;
             objContextDock.get(1).icon_rotation = r;
@@ -76,11 +76,12 @@ ZeUi.ZPage{
 
         repeat: false
         running: false
+        triggeredOnStart: false
         onTriggered: {
+            //console.log("Timer triggered:"+objTimer)
             objTimer.stop();
             noteFile.one();
             objTextViewer.text = noteFile.note;
-            objPage.isNoteChanged = false;
         }
     }
 
@@ -151,12 +152,12 @@ ZeUi.ZPage{
                 }
             }
         }
-        objPage.isNoteChanged = false;
 
         if(QbUtil.stringIEndsWith(objPage.title,".md"))
         {
             objSyntaxHighlighter.setHighlighter(objTextViewer.textEditItem);
         }
+        objPage.isNoteChanged = false;
     }
 
     onSelectedContextDockItem: {
@@ -176,6 +177,7 @@ ZeUi.ZPage{
                 if(objPage.isNoteChanged)
                 {
                     objPage.isSaving = true;
+                    noteFile.note = objTextViewer.text;
                     if(noteFile.update())
                     {
                         objPage.isNoteChanged = false;
@@ -220,6 +222,7 @@ ZeUi.ZPage{
             if(objPage.isNoteChanged)
             {
                 objPage.isSaving = true;
+                noteFile.note = objTextViewer.text;
                 if(objPage.noteFile.update())
                 {
                     objPage.isNoteChanged = false;
@@ -263,11 +266,17 @@ ZeUi.ZPage{
             readOnly: objPage.isReadOnly
 
             onTextChanged: {
-                if(noteFile)
+                if(objPage.noteFile)
                 {
-                    noteFile.note = text;
+                    if(objPage.noteFile.note !== text)
+                    {
+                        objPage.isNoteChanged = true;
+                    }
+                    else
+                    {
+                        objPage.isNoteChanged = false;
+                    }
                 }
-                objPage.isNoteChanged = true;
             }
 
             QbSyntax{

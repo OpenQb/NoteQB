@@ -204,4 +204,15 @@ Item {
         manager.trashByIndex(index);
     }
 
+    function closeAll(){
+        var pindex = objOneOneMap.lastIndex();
+        while(pindex)
+        {
+            QbUtil.getAppObject(objNQBOne.appId,"appUi").closePage(pindex);
+            objOneOneMap.remove(pindex);
+            objOneOneMap.remove(pindex);
+            --pindex;
+        }
+    }
+
 }

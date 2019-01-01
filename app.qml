@@ -23,7 +23,9 @@ ZeUi.ZAppUi{
         property alias windowY: objMainAppUi.windowY
     }
 
-    Component.onDestruction: {
+    onAppClosing: {
+        objMainAppUi.changePage(0);
+        NQBOne.closeAll();
         QbUtil.cleanAppObject(objMainAppUi.appId);
     }
 
