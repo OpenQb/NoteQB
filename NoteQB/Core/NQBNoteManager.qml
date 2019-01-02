@@ -185,6 +185,9 @@ Item {
         onError: {
             NQBOne.error(errorText);
         }
+        Component.onDestruction: {
+            objORM.closeORM();
+        }
 
         property Component note:Component{
             Models.NQBNote{
