@@ -110,7 +110,7 @@ ZeUi.ZDialogUi2{
                     {
                         if(Qt.platform.os === "android" || Qt.platform.os === "ios")
                         {
-
+                            fieldText = 
                         }
                     }
                 }
