@@ -110,7 +110,11 @@ ZeUi.ZDialogUi2{
                     {
                         if(Qt.platform.os === "android" || Qt.platform.os === "ios")
                         {
-
+                            fieldText = QbUtil.documentsPath("NoteQB");
+                        }
+                        else
+                        {
+                            fieldText = QbUtil.documentsPath("NoteQB");
                         }
                     }
                 }
