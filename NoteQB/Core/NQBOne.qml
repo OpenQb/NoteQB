@@ -108,6 +108,7 @@ Item {
                 m["password"] = password;
                 m["isPasswordProtected"] = true;
             }
+            console.log(JSON.stringify(m));
 
             QbUtil.getAppObject(objNQBOne.appId,"appUi").addPage("/NoteQB/pages/NoteDb.qml",m);
         }

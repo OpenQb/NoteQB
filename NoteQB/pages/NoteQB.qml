@@ -92,7 +92,8 @@ ZeUi.ZPage{
 
     onSelectedContextDockItem: {
         //title
-        if(title === "Add"){
+        if(title === "Add")
+        {
             objAddNoteDb.resetFields();
             objAddNoteDb.open();
         }
@@ -130,6 +131,15 @@ ZeUi.ZPage{
         target: NQBOne
         onRefresh:{
             refreshNoteDbListView();
+        }
+    }
+
+    Connections{
+        target: NQBOne
+        onRequestForPassword:{
+            objPasswordDialog.resetFields();
+            objPasswordDialog.pathField = path;
+            objPasswordDialog.open();
         }
     }
 
@@ -359,6 +369,19 @@ ZeUi.ZPage{
             objAddNoteDb.close();
         }
     }
+
+    Comp.NQBPasswordDialog{
+        id: objPasswordDialog
+        anchors.fill: parent
+        onButtonClicked: {
+            if(objPasswordDialog.isValid())
+            {
+                NQBOne.openNoteDbX(pathField,passwordField);
+            }
+            objPasswordDialog.close();
+        }
+    }
+
     /* end dialog space*/
 
     function refreshNoteDbListView()

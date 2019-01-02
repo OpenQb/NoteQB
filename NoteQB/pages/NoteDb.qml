@@ -147,12 +147,18 @@ ZeUi.ZPage{
             {
                 objPage.isDbReady = false
                 //TODO: show custom error message
+                console.log("Password is empty");
+                objErrorDialog.errorField = "Password can not be empty.";
+                objErrorDialog.open();
             }
             else{
                 objPage.isDbReady = objNoteManager.orm.isORMReady();
                 if(!objPage.isDbReady)
                 {
                     //TODO: show custom error message
+                    console.log("ORM is not ready.");
+                    objErrorDialog.errorField = "Wrong password.";
+                    objErrorDialog.open();
                 }
             }
         }
@@ -161,6 +167,9 @@ ZeUi.ZPage{
             if(!objPage.isDbReady)
             {
                 //TODO: show custom error message
+                console.log("ORM is not ready.");
+                objErrorDialog.errorField = "Failed to open database.";
+                objErrorDialog.open();
             }
         }
 
@@ -278,7 +287,7 @@ ZeUi.ZPage{
                     font.pixelSize: 20
                     width: 50
                     height: 50
-                    enabled: objNoteManager.currentPage>1
+                    enabled: objNoteManager.currentPage>1 && objPage.isDbReady
                     onClicked: {
                         objNoteManager.currentPage = objNoteManager.currentPage - 1;
                         objNoteManager.getPage(objNoteManager.currentPage);
@@ -291,7 +300,7 @@ ZeUi.ZPage{
                     font.pixelSize: 20
                     width: 50
                     height: 50
-                    enabled: objNoteManager.currentPage<objNoteListView.noteQueryModel.totalPages;
+                    enabled: objNoteManager.currentPage<objNoteListView.noteQueryModel.totalPages && objPage.isDbReady
                     onClicked: {
                         //console.log("CLICKED");
                         //console.log(objNoteListView.noteQueryModel.totalItems);
@@ -316,6 +325,11 @@ ZeUi.ZPage{
         {
             objNoteManager.fullTextSearch(objSearchDialog.searchTerm);
         }
+    }
+
+    Comp.NQBErrorDialog{
+        id: objErrorDialog
+        anchors.fill: parent
     }
 
     Comp.NQBAddNote{
