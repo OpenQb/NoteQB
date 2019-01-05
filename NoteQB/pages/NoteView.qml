@@ -1,5 +1,6 @@
 import Qb 1.0
 import Qb.ORM 1.0
+//import Qb.Report 1.0
 import Qb.Core 1.0
 import Qb.QbSyntax 1.0
 
@@ -170,6 +171,10 @@ ZeUi.ZPage{
         {
             objPage.isReadOnly = !objPage.isReadOnly;
         }
+        else if(title === "Print")
+        {
+            //objPDFWriter.qmlTextDocumentWrite(objTextViewer);
+        }
         else if(title === "Save")
         {
             if(noteFile)
@@ -199,6 +204,10 @@ ZeUi.ZPage{
             title: "Save"
             icon_rotation: 0
         }
+//        ListElement{
+//            icon: "mf-print"
+//            title: "Print"
+//        }
         ListElement{
             icon: "mf-cancel"
             title: "Close"
@@ -284,6 +293,10 @@ ZeUi.ZPage{
                 highlighterName: "markdown"
             }
         }
+
+//        QbPdfWriter{
+//            id: objPDFWriter
+//        }
 
     }//Rectangle
 
