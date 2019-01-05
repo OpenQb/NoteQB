@@ -66,27 +66,36 @@ Item {
         id: lineNumbers
         anchors.top: parent.top
         anchors.left: parent.left
+
         height: parent.height
-        width: column.width*1.2
+        width: objTextDocHelper.lineNumberAreaWidth+5
+
         color: objTextViewer.lineNumberBackgroundColor
 
         Column {
             id: column
             y: 3 * objTextViewer.pixelDensity - flickable.contentY
+            width: parent.width
             anchors.horizontalCenter: parent.horizontalCenter
 
             Repeater {
-                model: objTextDocHelper.totalLineNumber ===0?1:objTextDocHelper.totalLineNumber
-                delegate: Text {
-                    anchors.right: column.right
-                    color: index + 1 === objTextDocHelper.currentLineNumber ? objTextViewer.currentLineNumberColor : objTextViewer.lineNumberColor
-                    font.family: objTextViewer.fontFamily
-                    font.pixelSize: objTextViewer.fontSize
-                    font.bold: index + 1 === objTextDocHelper.currentLineNumber
-                    text: index + 1
-                    height: objTextDocHelper.totalLineNumber ===0?textEdit.cursorRectangle.height:objTextDocHelper.lineData(index).height//textEdit.cursorRectangle.height //objTextDocHelper.lineData(index).height
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
+                model: objTextDocHelper.totalLineNumber
+                delegate: Rectangle{
+                    height: objTextDocHelper.lineData(index).height
+                    width: lineNumbers.width
+                    color: objTextViewer.lineNumberBackgroundColor//index%2?"green":"yellow"
+                    Text {
+                        width: parent.width - 5
+                        height: parent.height
+                        id: objLineNo
+                        color: index + 1 === objTextDocHelper.currentLineNumber ? objTextViewer.currentLineNumberColor : objTextViewer.lineNumberColor
+                        font.family: objTextDocHelper.lineNumberFont.family
+                        font.pixelSize: objTextDocHelper.lineNumberFont.pixelSize
+                        font.bold: index + 1 === objTextDocHelper.currentLineNumber
+                        text: index + 1
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignRight
+                    }
                 }
             }
         }
@@ -98,6 +107,7 @@ Item {
         y: 0
         height: parent.height
         width: parent.width - lineNumbers.width
+
         interactive: true
         clip: true
 
@@ -122,28 +132,28 @@ Item {
             else if (contentX + width <= cursor.x + cursor.width)
                 contentX = cursor.x + cursor.width - width
 
-//            if (textEdit.currentLine === 1)
-//            {
-//                contentY = 0;
-//                contentX = contentWidth - width;
-//            }
-//            else if (textEdit.currentLine === textEdit.lineCount && flickable.visibleArea.heightRatio < 1)
-//            {
-//                contentY = contentHeight - height
-//                contentX = contentWidth - width;
-//            }
-//            else
-//            {
-//                if (contentY >= cursor.y)
-//                    contentY = cursor.y
-//                else if (contentY + height <= cursor.y + cursor.height)
-//                    contentY = cursor.y + cursor.height - height
+            //            if (textEdit.currentLine === 1)
+            //            {
+            //                contentY = 0;
+            //                contentX = contentWidth - width;
+            //            }
+            //            else if (textEdit.currentLine === textEdit.lineCount && flickable.visibleArea.heightRatio < 1)
+            //            {
+            //                contentY = contentHeight - height
+            //                contentX = contentWidth - width;
+            //            }
+            //            else
+            //            {
+            //                if (contentY >= cursor.y)
+            //                    contentY = cursor.y
+            //                else if (contentY + height <= cursor.y + cursor.height)
+            //                    contentY = cursor.y + cursor.height - height
 
-//                if (contentX >= cursor.x)
-//                    contentX = cursor.x
-//                else if (contentX + width <= cursor.x + cursor.width)
-//                    contentX = cursor.x + cursor.width - width
-//            }
+            //                if (contentX >= cursor.x)
+            //                    contentX = cursor.x
+            //                else if (contentX + width <= cursor.x + cursor.width)
+            //                    contentX = cursor.x + cursor.width - width
+            //            }
 
         }
 
@@ -164,6 +174,7 @@ Item {
             onCursorRectangleChanged: {
                 flickable.ensureVisible(cursorRectangle);
                 objTextDocHelper.cursorPos = textEdit.cursorPosition;
+                objTextDocHelper.cursorRectangle = cursorRectangle;
             }
             cursorDelegate: Component{
                 Rectangle{
@@ -187,101 +198,102 @@ Item {
             QbTextDocumentHelper{
                 id: objTextDocHelper
                 textArea: textEdit
+                lineNumberFont: textEdit.font
             }
 
 
-//            onLengthChanged: {
-//                if (objTextViewer.indentSize === 0)
-//                    return
+            //            onLengthChanged: {
+            //                if (objTextViewer.indentSize === 0)
+            //                    return
 
-//                // This is kind of stupid workaround, we forced to do this check because TextEdit sends
-//                // us "textChanged" and "lengthChanged" signals after every select() and forceActiveFocus() call
-//                if (text !== previousText)
-//                {
-//                    if (textChangedManually)
-//                    {
-//                        previousText = text
-//                        textChangedManually = false
-//                        return
-//                    }
+            //                // This is kind of stupid workaround, we forced to do this check because TextEdit sends
+            //                // us "textChanged" and "lengthChanged" signals after every select() and forceActiveFocus() call
+            //                if (text !== previousText)
+            //                {
+            //                    if (textChangedManually)
+            //                    {
+            //                        previousText = text
+            //                        textChangedManually = false
+            //                        return
+            //                    }
 
-//                    if (length > previousText.length)
-//                    {
-//                        var textBeforeCursor
-//                        var openBrackets
-//                        var closeBrackets
-//                        var openBracketsCount
-//                        var closeBracketsCount
-//                        var indentDepth
-//                        var indentString
+            //                    if (length > previousText.length)
+            //                    {
+            //                        var textBeforeCursor
+            //                        var openBrackets
+            //                        var closeBrackets
+            //                        var openBracketsCount
+            //                        var closeBracketsCount
+            //                        var indentDepth
+            //                        var indentString
 
-//                        var lastCharacter = text[cursorPosition - 1]
+            //                        var lastCharacter = text[cursorPosition - 1]
 
-//                        switch (lastCharacter)
-//                        {
-//                        case "\n":
-//                            textBeforeCursor = text.substring(0, cursorPosition - 1)
-//                            openBrackets = textBeforeCursor.match(/\{/g)
-//                            closeBrackets = textBeforeCursor.match(/\}/g)
+            //                        switch (lastCharacter)
+            //                        {
+            //                        case "\n":
+            //                            textBeforeCursor = text.substring(0, cursorPosition - 1)
+            //                            openBrackets = textBeforeCursor.match(/\{/g)
+            //                            closeBrackets = textBeforeCursor.match(/\}/g)
 
-//                            if (openBrackets !== null)
-//                            {
-//                                openBracketsCount = openBrackets.length
-//                                closeBracketsCount = 0
+            //                            if (openBrackets !== null)
+            //                            {
+            //                                openBracketsCount = openBrackets.length
+            //                                closeBracketsCount = 0
 
-//                                if (closeBrackets !== null)
-//                                    closeBracketsCount = closeBrackets.length
+            //                                if (closeBrackets !== null)
+            //                                    closeBracketsCount = closeBrackets.length
 
-//                                indentDepth = openBracketsCount - closeBracketsCount
-//                                indentString = new Array(indentDepth + 1).join(textEdit.indentString)
-//                                textChangedManually = true
-//                                insert(cursorPosition, indentString)
-//                            }
-//                            break
-//                        case "}":
-//                            var lineBreakPosition
-//                            for (var i = cursorPosition - 2; i >= 0; i--)
-//                            {
-//                                if (text[i] !== " ")
-//                                {
-//                                    if (text[i] === "\n")
-//                                        lineBreakPosition = i
+            //                                indentDepth = openBracketsCount - closeBracketsCount
+            //                                indentString = new Array(indentDepth + 1).join(textEdit.indentString)
+            //                                textChangedManually = true
+            //                                insert(cursorPosition, indentString)
+            //                            }
+            //                            break
+            //                        case "}":
+            //                            var lineBreakPosition
+            //                            for (var i = cursorPosition - 2; i >= 0; i--)
+            //                            {
+            //                                if (text[i] !== " ")
+            //                                {
+            //                                    if (text[i] === "\n")
+            //                                        lineBreakPosition = i
 
-//                                    break
-//                                }
-//                            }
+            //                                    break
+            //                                }
+            //                            }
 
-//                            if (lineBreakPosition !== undefined)
-//                            {
-//                                textChangedManually = true
-//                                remove(lineBreakPosition + 1, cursorPosition - 1)
+            //                            if (lineBreakPosition !== undefined)
+            //                            {
+            //                                textChangedManually = true
+            //                                remove(lineBreakPosition + 1, cursorPosition - 1)
 
-//                                textBeforeCursor = text.substring(0, cursorPosition - 1)
-//                                openBrackets = textBeforeCursor.match(/\{/g)
-//                                closeBrackets = textBeforeCursor.match(/\}/g)
+            //                                textBeforeCursor = text.substring(0, cursorPosition - 1)
+            //                                openBrackets = textBeforeCursor.match(/\{/g)
+            //                                closeBrackets = textBeforeCursor.match(/\}/g)
 
-//                                if (openBrackets !== null)
-//                                {
-//                                    openBracketsCount = openBrackets.length
-//                                    closeBracketsCount = 0
+            //                                if (openBrackets !== null)
+            //                                {
+            //                                    openBracketsCount = openBrackets.length
+            //                                    closeBracketsCount = 0
 
-//                                    if (closeBrackets !== null)
-//                                        closeBracketsCount = closeBrackets.length
+            //                                    if (closeBrackets !== null)
+            //                                        closeBracketsCount = closeBrackets.length
 
-//                                    indentDepth = openBracketsCount - closeBracketsCount - 1
-//                                    indentString = new Array(indentDepth + 1).join(textEdit.indentString)
-//                                    textChangedManually = true
-//                                    insert(cursorPosition - 1, indentString)
-//                                }
-//                            }
+            //                                    indentDepth = openBracketsCount - closeBracketsCount - 1
+            //                                    indentString = new Array(indentDepth + 1).join(textEdit.indentString)
+            //                                    textChangedManually = true
+            //                                    insert(cursorPosition - 1, indentString)
+            //                                }
+            //                            }
 
-//                            break
-//                        }
-//                    }
+            //                            break
+            //                        }
+            //                    }
 
-//                    previousText = text
-//                }
-//            }
+            //                    previousText = text
+            //                }
+            //            }
 
 
             Component.onCompleted: {
