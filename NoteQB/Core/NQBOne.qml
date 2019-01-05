@@ -214,6 +214,8 @@ Item {
             objOneOneMap.remove(pindex);
             --pindex;
         }
+        objOneOneMap.remove(pindex);
+        objOneOneMap.remove(pindex);
     }
 
 }

@@ -29,7 +29,8 @@ ZeUi.ZAppUi{
         QbUtil.cleanAppObject(objMainAppUi.appId);
     }
 
-    Component.onCompleted: {
+    onAppStarted: {
+        //console.log("App started");
         QbUtil.addAppObject(objMainAppUi.appId,"appUi",objMainAppUi);
         QbUtil.addAppObject(objMainAppUi.appId,"ZBLib",ZeUi.ZBLib);
         QbUtil.addAppObject(objMainAppUi.appId,"ZBTheme",ZeUi.ZBTheme);

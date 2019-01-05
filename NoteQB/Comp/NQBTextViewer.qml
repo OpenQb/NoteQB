@@ -6,6 +6,7 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Material 2.2
+import Qb.QbSyntax 1.0
 
 Item {
     id: objTextViewer
@@ -75,15 +76,15 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             Repeater {
-                model: textEdit.lineCount
+                model: objTextDocHelper.totalLineNumber ===0?1:objTextDocHelper.totalLineNumber
                 delegate: Text {
                     anchors.right: column.right
-                    color: index + 1 === textEdit.currentLine ? objTextViewer.currentLineNumberColor : objTextViewer.lineNumberColor
+                    color: index + 1 === objTextDocHelper.currentLineNumber ? objTextViewer.currentLineNumberColor : objTextViewer.lineNumberColor
                     font.family: objTextViewer.fontFamily
                     font.pixelSize: objTextViewer.fontSize
-                    font.bold: index + 1 === textEdit.currentLine
+                    font.bold: index + 1 === objTextDocHelper.currentLineNumber
                     text: index + 1
-                    height: textEdit.cursorRectangle.height
+                    height: objTextDocHelper.totalLineNumber ===0?textEdit.cursorRectangle.height:objTextDocHelper.lineData(index).height//textEdit.cursorRectangle.height //objTextDocHelper.lineData(index).height
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                 }
@@ -98,29 +99,56 @@ Item {
         height: parent.height
         width: parent.width - lineNumbers.width
         interactive: true
+        clip: true
 
         ScrollBar.vertical: ScrollBar {
             id: objScrollBar
         }
 
+        ScrollBar.horizontal: ScrollBar{
+            id: objHScrollBar
+        }
+
         function ensureVisible(cursor)
         {
-            if (textEdit.currentLine === 1)
-                contentY = 0
-            else if (textEdit.currentLine === textEdit.lineCount && flickable.visibleArea.heightRatio < 1)
-                contentY = contentHeight - height
-            else
-            {
-                if (contentY >= cursor.y)
-                    contentY = cursor.y
-                else if (contentY + height <= cursor.y + cursor.height)
-                    contentY = cursor.y + cursor.height - height
-            }
+
+            if (contentY >= cursor.y)
+                contentY = cursor.y
+            else if (contentY + height <= cursor.y + cursor.height)
+                contentY = cursor.y + cursor.height - height
+
+            if (contentX >= cursor.x)
+                contentX = cursor.x
+            else if (contentX + width <= cursor.x + cursor.width)
+                contentX = cursor.x + cursor.width - width
+
+//            if (textEdit.currentLine === 1)
+//            {
+//                contentY = 0;
+//                contentX = contentWidth - width;
+//            }
+//            else if (textEdit.currentLine === textEdit.lineCount && flickable.visibleArea.heightRatio < 1)
+//            {
+//                contentY = contentHeight - height
+//                contentX = contentWidth - width;
+//            }
+//            else
+//            {
+//                if (contentY >= cursor.y)
+//                    contentY = cursor.y
+//                else if (contentY + height <= cursor.y + cursor.height)
+//                    contentY = cursor.y + cursor.height - height
+
+//                if (contentX >= cursor.x)
+//                    contentX = cursor.x
+//                else if (contentX + width <= cursor.x + cursor.width)
+//                    contentX = cursor.x + cursor.width - width
+//            }
+
         }
 
         TextEdit {
             id: textEdit
-            width: parent.width
 
             //color: "black"
             //selectionColor: palette.editorSelection
@@ -129,12 +157,14 @@ Item {
             font.family: objTextViewer.fontFamily
             font.pixelSize: objTextViewer.fontSize
             textMargin: 5 * objTextViewer.pixelDensity
-            wrapMode: TextEdit.Wrap
+            wrapMode: TextEdit.NoWrap
             textFormat: TextEdit.PlainText
             inputMethodHints: Qt.ImhNoPredictiveText
             activeFocusOnPress: false
-            onCursorRectangleChanged: flickable.ensureVisible(cursorRectangle)
-
+            onCursorRectangleChanged: {
+                flickable.ensureVisible(cursorRectangle);
+                objTextDocHelper.cursorPos = textEdit.cursorPosition;
+            }
             cursorDelegate: Component{
                 Rectangle{
                     color: "black"
@@ -148,9 +178,16 @@ Item {
 
             onContentHeightChanged:
                 flickable.contentHeight = contentHeight
+            onContentWidthChanged:
+                flickable.contentWidth = contentWidth
 
             property bool textChangedManually: false
             property string previousText: ""
+
+            QbTextDocumentHelper{
+                id: objTextDocHelper
+                textArea: textEdit
+            }
 
 
 //            onLengthChanged: {
@@ -477,7 +514,7 @@ Item {
                     startY = mouse.y;
                     startPosition = textEdit.positionAt(mouse.x, mouse.y);
                     textEdit.cursorPosition = startPosition;
-
+                    objTextDocHelper.cursorPos = textEdit.cursorPosition;
                     textEdit.forceActiveFocus();
 
                     if (!Qt.inputMethod.visible)
