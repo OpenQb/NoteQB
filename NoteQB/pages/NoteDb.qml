@@ -85,6 +85,10 @@ ZeUi.ZPage{
                 objGroupList.openMenu(0,y);
             }
         }
+        else if(title === "Close")
+        {
+            QbUtil.getAppObject(objPage.appId,"NQBOne").closeCurrentNoteDb();
+        }
     }
 
     ListModel{
@@ -108,6 +112,10 @@ ZeUi.ZPage{
         ListElement{
             icon: "mf-refresh"
             title: "Refresh"
+        }
+        ListElement{
+            icon: "mf-cancel"
+            title: "Close"
         }
     }
 

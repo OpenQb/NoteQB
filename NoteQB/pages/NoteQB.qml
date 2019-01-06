@@ -27,7 +27,10 @@ ZeUi.ZPage{
     }
     activeFocusOnTab: true
 
-    Keys.forwardTo: [objNoteDbListView,objNoteDbListViewPlaceHolder]
+    Keys.forwardTo: [objPasswordDialog,objAddNoteDb,objNoteDbListView,objNoteDbListViewPlaceHolder]
+
+    //    KeyNavigation.tab: objPasswordDialog.visible?objPasswordDialog:objNoteDbListView
+    //    KeyNavigation.right: objPasswordDialog.visible?objPasswordDialog:objNoteDbListView
 
 
     states: [
@@ -176,6 +179,8 @@ ZeUi.ZPage{
                 model: objNoteDbQueryModel
                 activeFocusOnTab: true
                 currentIndex: 0
+//                KeyNavigation.tab: QbUtil.getAppObject(objNoteQBPage.appId,"appUi").dockView
+//                KeyNavigation.left: QbUtil.getAppObject(objNoteQBPage.appId,"appUi").dockView
                 onActiveFocusChanged: {
                     if(activeFocus){
                         if(objNoteDbListView.currentItem){

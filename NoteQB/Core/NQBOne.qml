@@ -199,6 +199,13 @@ Item {
         objOneOneMap.remove(i);
     }
 
+    function closeCurrentNoteDb()
+    {
+        var i = QbUtil.getAppObject(objNQBOne.appId,"appUi").pageView.currentIndex;
+        ZeUi.ZBLib.appUi.closePage(i);
+        objOneOneMap.remove(i);
+    }
+
     function deleteNote(title,manager,pk,index){
         console.log("Delete Note");
         closeNote(title,manager,pk,index);
