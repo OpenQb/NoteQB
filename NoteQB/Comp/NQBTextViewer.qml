@@ -183,6 +183,7 @@ Item {
             textFormat: TextEdit.PlainText
             inputMethodHints: Qt.ImhNoPredictiveText
             activeFocusOnPress: false
+            cursorVisible: textEdit.readOnly
             onCursorRectangleChanged: {
                 flickable.ensureVisible(cursorRectangle);
                 objTextDocHelper.cursorPos = textEdit.cursorPosition;
