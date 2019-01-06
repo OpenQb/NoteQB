@@ -113,10 +113,22 @@ Item {
 
         ScrollBar.vertical: ScrollBar {
             id: objScrollBar
+//            contentItem: Rectangle {
+//                implicitWidth: 6
+//                implicitHeight: 100
+//                radius: width / 2
+//                color: objScrollBar.pressed ? "#81e889" : "#c2f4c6"
+//            }
         }
 
         ScrollBar.horizontal: ScrollBar{
             id: objHScrollBar
+//            contentItem: Rectangle {
+//                implicitWidth: 100
+//                implicitHeight: 6
+//                radius: height / 2
+//                color: objHScrollBar.pressed ? "#81e889" : "#c2f4c6"
+//            }
         }
 
         function ensureVisible(cursor)
