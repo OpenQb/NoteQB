@@ -204,10 +204,14 @@ ZeUi.ZPage{
             title: "Save"
             icon_rotation: 0
         }
-//        ListElement{
-//            icon: "mf-print"
-//            title: "Print"
-//        }
+        ListElement{
+            icon: "mf-settings"
+            title: "Settings"
+        }
+        //        ListElement{
+        //            icon: "mf-print"
+        //            title: "Print"
+        //        }
         ListElement{
             icon: "mf-cancel"
             title: "Close"
@@ -294,9 +298,9 @@ ZeUi.ZPage{
             }
         }
 
-//        QbPdfWriter{
-//            id: objPDFWriter
-//        }
+        //        QbPdfWriter{
+        //            id: objPDFWriter
+        //        }
 
     }//Rectangle
 

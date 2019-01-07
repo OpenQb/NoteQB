@@ -10,7 +10,8 @@ Rectangle{
     id: objSearchScreen
     visible: false
 
-    property alias searchTerm: objSearchField.text
+    property string searchTerm;
+    property string placeHolderText: "Full Text Search"
     property var lastActiveItem;
 
 
@@ -66,6 +67,24 @@ Rectangle{
             font.family: QbCoreOne.icon_font_name("mf-search")
             font.pixelSize: parent.height*0.60
             color: "grey"
+
+        }
+
+        Text{
+            id: objPlaceHolderText
+            text: objSearchScreen.placeHolderText
+            color: "grey"
+            anchors.left: objSearchIcon.right
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: 5
+            verticalAlignment: TextInput.AlignVCenter
+            font.family: ZeUi.ZBTheme.defaultFontFamily
+            font.pixelSize: 20
+            font.bold: true
+            activeFocusOnTab: false
+            opacity: 1
         }
 
         TextInput {
@@ -83,9 +102,19 @@ Rectangle{
             selectionColor: "lightblue"
             selectedTextColor: "black"
             color: "black"
-            property string placeholderText: qsTr("Search")
             onFocusChanged: {
-                console.log("TextInput Focus:",focus)
+                //console.log("TextInput Focus:",focus)
+            }
+            onTextChanged: {
+                if(objSearchField.text.length === 0)
+                {
+                    objPlaceHolderText.opacity = 1;
+                }
+                else
+                {
+                    objPlaceHolderText.opacity = 0;
+                }
+                objSearchScreen.searchTerm = text;
             }
         }
 
@@ -93,7 +122,7 @@ Rectangle{
 
     function openSearchWindow()
     {
-        objSearchField.text = "";
+        //objSearchField.text = "";
         objSearchScreen.lastActiveItem = appUi.getCurrentFocusItem();
         objSearchScreen.lastActiveItem.focus = false;
 

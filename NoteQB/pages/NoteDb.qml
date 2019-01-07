@@ -114,6 +114,10 @@ ZeUi.ZPage{
             title: "Refresh"
         }
         ListElement{
+            icon: "mf-settings"
+            title: "Settings"
+        }
+        ListElement{
             icon: "mf-cancel"
             title: "Close"
         }

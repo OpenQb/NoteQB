@@ -1,4 +1,6 @@
 import Qb.ORM 1.0
+import Qb.Core 1.0
+import Qb.ExSql 1.0
 import QtQuick 2.10
 
 import "./../Models" as Models
@@ -178,15 +180,17 @@ Item {
 
 
     /**/
-
     QbORM{
         id: objORM
 
         onError: {
             NQBOne.error(errorText);
         }
+
         Component.onDestruction: {
             objORM.closeORM();
+        }
+        Component.onCompleted: {
         }
 
         property Component note:Component{

@@ -1,4 +1,5 @@
 import Qb 1.0
+import Qb.ORM 1.0
 import Qb.Core 1.0
 
 import QtQuick 2.10
@@ -131,7 +132,7 @@ ZeUi.ZDialogUi2{
                 labelWidth: 30
                 borderWidth: 1
                 width: objAddNoteDbDialog.dialogWidth
-                comboBoxModel: ["QDBN","QDBX"]
+                comboBoxModel: QbORMUtil.isSQLDriverExists("BEESD")?["QDBN","QDBX"]:["QDBN"]
                 onFieldTextChanged: {
                     objAddNoteDbDialog.dbFormatField = fieldText;
                 }
