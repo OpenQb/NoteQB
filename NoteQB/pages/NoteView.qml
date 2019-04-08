@@ -54,9 +54,10 @@ ZeUi.ZPage{
 
     QtObject{
         id: objNoteMeta
-        property bool isAutoSave: false
-        property bool showLineNumbers: true
-        property int fontSize: 10
+        property alias isAutoSave: objNoteSettings.autoSave
+        property alias showLineNumbers: objNoteSettings.showLineNumbers
+        property alias fontSize: objNoteSettings.fontPixelSize
+        property alias fontFamily: objNoteSettings.fontFamily
     }
 
     Timer{
@@ -113,6 +114,40 @@ ZeUi.ZPage{
         {
             if(noteFile)
             {
+                if(noteFile)
+                {
+                    if(objNoteMeta.isAutoSave){
+                        if(objPage.isNoteChanged)
+                        {
+                            objPage.isSaving = true;
+                            noteFile.note = objTextViewer.text;
+                            if(noteFile.update())
+                            {
+                                objPage.isNoteChanged = false;
+                                objPage.isSaving = false;
+                            }
+                        }
+                    }
+                }
+                noteManager.releaseNoteFile(noteFile);
+            }
+
+
+            if(noteMeta)
+            {
+                noteMeta.meta = QbUtil.objectToMap(objNoteMeta);
+                noteMeta.update();
+                noteManager.releaseNoteMeta(noteMeta);
+            }
+
+        }
+    }
+
+    function taskBeforeClose(){
+        if(noteManager)
+        {
+            if(noteFile)
+            {
                 if(objNoteMeta.isAutoSave)
                 {
                     noteFile.update();
@@ -127,7 +162,6 @@ ZeUi.ZPage{
                 noteMeta.update();
                 noteManager.releaseNoteMeta(noteMeta);
             }
-
         }
     }
 
@@ -191,6 +225,20 @@ ZeUi.ZPage{
                 }
             }
         }
+        else if(title === "Settings")
+        {
+            console.log("Settings");
+            objNoteSettings.openDialog();
+            //            if(objNoteSettings.visible)
+            //            {
+            //                objNoteSettings.close();
+            //            }
+            //            else
+            //            {
+            //                objNoteSettings.open();
+            //            }
+        }
+
     }
 
     ListModel{
@@ -277,6 +325,9 @@ ZeUi.ZPage{
             Material.theme: Material.Light
 
             readOnly: objPage.isReadOnly
+            fontFamily: objNoteMeta.fontFamily
+            fontSize: objNoteMeta.fontSize
+            showLineNumbers: objNoteMeta.showLineNumbers
 
             onTextChanged: {
                 if(objPage.noteFile)
@@ -303,7 +354,6 @@ ZeUi.ZPage{
         //        }
 
     }//Rectangle
-
 
 
     Rectangle{
@@ -341,6 +391,27 @@ ZeUi.ZPage{
             }
             onPressed: {
             }
+        }
+    }
+
+
+    /*Settings*/
+
+    Comp.NQBNoteSettings{
+        id: objNoteSettings
+        width: parent.width*0.80
+        height: parent.height*0.80
+        x: (parent.width - width)/2.0
+        y: (parent.height - height)/2.0
+        appId: objPage.appId
+        enableStatusBar: true
+        onButtonClicked: {
+            if(objPage.noteMeta)
+            {
+                objPage.noteMeta.meta = QbUtil.objectToMap(objNoteMeta);
+                noteMeta.update();
+            }
+            objNoteSettings.closeDialog();
         }
     }
 

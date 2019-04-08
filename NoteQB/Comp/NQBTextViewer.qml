@@ -29,6 +29,7 @@ Item {
 
     property string fontFamily: "Ubuntu"
     property int fontSize: 14
+    property bool showLineNumbers: true;
 
     onIndentSizeChanged: {
         var indentString = ""
@@ -68,9 +69,9 @@ Item {
         anchors.left: parent.left
 
         height: parent.height
-        width: objTextDocHelper.lineNumberAreaWidth+5
-
+        width: visible?objTextDocHelper.lineNumberAreaWidth+5:0
         color: objTextViewer.lineNumberBackgroundColor
+        visible: objTextViewer.showLineNumbers
 
         Column {
             id: column
@@ -212,6 +213,9 @@ Item {
                 id: objTextDocHelper
                 textArea: textEdit
                 lineNumberFont: textEdit.font
+                onLineNumberFontChanged: {
+                    objTextDocHelper.refresh();
+                }
             }
 
 

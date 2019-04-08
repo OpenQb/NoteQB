@@ -144,7 +144,7 @@ Item {
         objNoteManager.currentPage = 1;
         objNoteManager.noteQuery.resetFilters();
         objNoteManager.noteQuery.filter("status", QbORMFilter.EQUAL, 0);
-        objNoteManager.noteQuery.and_("name", QbORMFilter.CONTAINS, s);
+        objNoteManager.noteQuery.band_("name", QbORMFilter.CONTAINS, s);
         objNoteManager.noteQuery.or_("group", QbORMFilter.CONTAINS, s);
         objNoteManager.noteQuery.or_("tags", QbORMFilter.CONTAINS, s);
         objNoteManager.noteQuery.total();

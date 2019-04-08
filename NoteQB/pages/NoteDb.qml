@@ -158,7 +158,7 @@ ZeUi.ZPage{
             if(objPage.password === "")
             {
                 objPage.isDbReady = false
-                //TODO: show custom error message
+                //DONE: show custom error message
                 console.log("Password is empty");
                 objErrorDialog.errorField = "Password can not be empty.";
                 objErrorDialog.open();
@@ -167,7 +167,7 @@ ZeUi.ZPage{
                 objPage.isDbReady = objNoteManager.orm.isORMReady();
                 if(!objPage.isDbReady)
                 {
-                    //TODO: show custom error message
+                    //DONE: show custom error message
                     console.log("ORM is not ready.");
                     objErrorDialog.errorField = "Wrong password.";
                     objErrorDialog.open();
@@ -178,7 +178,7 @@ ZeUi.ZPage{
             objPage.isDbReady = objNoteManager.orm.isORMReady();
             if(!objPage.isDbReady)
             {
-                //TODO: show custom error message
+                //DONE: show custom error message
                 console.log("ORM is not ready.");
                 objErrorDialog.errorField = "Failed to open database.";
                 objErrorDialog.open();
@@ -270,7 +270,15 @@ ZeUi.ZPage{
             id: objSearchBarPlaceHolder
             width: parent.width
             anchors.top: parent.top
-            height: 0
+            height: 40
+            Comp.NQBSearchField{
+                width: parent.width*0.50
+                height: parent.height*0.85
+                anchors.centerIn: parent
+                onSearchTermChanged: {
+                    search(searchTerm);
+                }
+            }
         }
 
         NoteDBComp.NDbVSimpleNoteListView{
@@ -282,23 +290,36 @@ ZeUi.ZPage{
             anchors.bottom: objBottomBarPlaceHolder.top
             noteQueryModel.limit: objNoteManager.limit
         }
+        Text{
+            anchors.top: objSearchBarPlaceHolder.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: objBottomBarPlaceHolder.top
+            text: "Nothing found"
+            color: "grey"
+            font.bold: true
+            font.pixelSize: 20
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            visible: objNoteListView.noteQueryModel.totalItems === 0
+        }
 
         Item{
             id: objBottomBarPlaceHolder
             width: parent.width
-            height: 50
+            height: 40
             anchors.bottom: parent.bottom
 
             Row{
                 width: 100
-                height: 50
+                height: parent.height
                 anchors.centerIn: parent
                 ZeUi.ZMRoundButton{
                     text: QbMF3.icon("mf-navigate_before")
                     font.family: QbMF3.family
                     font.pixelSize: 20
-                    width: 50
-                    height: 50
+                    width: parent.height
+                    height: parent.height
                     enabled: objNoteManager.currentPage>1 && objPage.isDbReady
                     onClicked: {
                         objNoteManager.currentPage = objNoteManager.currentPage - 1;
@@ -310,8 +331,8 @@ ZeUi.ZPage{
                     text: QbMF3.icon("mf-navigate_next")
                     font.family: QbMF3.family
                     font.pixelSize: 20
-                    width: 50
-                    height: 50
+                    width: parent.height
+                    height: parent.height
                     enabled: objNoteManager.currentPage<objNoteListView.noteQueryModel.totalPages && objPage.isDbReady
                     onClicked: {
                         //console.log("CLICKED");

@@ -26,14 +26,15 @@ ZeUi.ZAppUi{
     onAppClosing: {
         objMainAppUi.changePage(0);
         NQBOne.closeAll();
-        QbUtil.cleanAppObject(objMainAppUi.appId);
+        //QbUtil.cleanAppObject(objMainAppUi.appId);
     }
 
     onAppStarted: {
-        //console.log("App started");
-        QbUtil.addAppObject(objMainAppUi.appId,"appUi",objMainAppUi);
-        QbUtil.addAppObject(objMainAppUi.appId,"ZBLib",ZeUi.ZBLib);
-        QbUtil.addAppObject(objMainAppUi.appId,"ZBTheme",ZeUi.ZBTheme);
+        console.log("App started");
+        console.log(objMainAppUi.appId);
+        //QbUtil.addAppObject(objMainAppUi.appId,"appUi",objMainAppUi);
+        //QbUtil.addAppObject(objMainAppUi.appId,"ZBLib",ZeUi.ZBLib);
+        //QbUtil.addAppObject(objMainAppUi.appId,"ZBTheme",ZeUi.ZBTheme);
         QbUtil.addAppObject(objMainAppUi.appId,"NQBOne",NQBOne);
         NQBOne.appId = objMainAppUi.appId;
 

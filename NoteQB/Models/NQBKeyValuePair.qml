@@ -4,7 +4,7 @@ import QtQuick 2.0
 
 QbORMModel{
     tableName: "NQBKeyValuePair";
-    property var name: QbORMField.charField("",512/*maxLength*/,true/*isUnique*/);
+    pk: QbORMField.varchar("",512/*maxLength*/,true/*isUnique*/,true);
     property var value:  QbORMField.variant("")
 
     property var updated: QbORMField.timestamp(0,true,true);

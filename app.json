@@ -2,7 +2,7 @@
     "name"			      : "NoteQB",
     "version"		      : "1.0.0",
     "build"               : 1,
-    "namespace"		      : "com.cliodin.qb.NoteQB",
+    "namespace"		      : "qb.apps.NoteQB",
 	
     "supportedOs"         : ["android","ios","osx","windows","linux"],
     "tags"                : "note,notebook,markdown",
@@ -14,7 +14,7 @@
     "minQbVersion"        : "1.0.0",
     "minQbBuildNumber"    : 1925,
     "appVariant"          : "APP",
-    "packageVariant"      : "QAP",
+    "packageVariant"      : "QFP",
 
     "description"         : "Easy to use notepad",
 
